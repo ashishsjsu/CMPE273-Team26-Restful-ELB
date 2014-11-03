@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 
 //connect to database
-var ProxyConfig = require("./models/ProxyConfigModel");
+var ProxyConfig = require("../models/ProxyConfigModel");
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/nodetest2");
 
