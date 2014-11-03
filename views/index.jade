@@ -11,17 +11,15 @@ block content
         #proxyInfo
             h2 Proxy Info
             p
-                strong proxyHost:
-                |  <span id='proxyInfoProxyHost'></span>
+                strong ProxyURL:
+                |  <span id='proxyInfoProxyURL'></span>
                 br
-                strong Port:
-                |  <span id='proxyInfoPort'></span>
+                strong TargetURL:
+                |  <span id='proxyInfoTargetURL'></span>
                 br
-                strong targetHost:
-                |  <span id='proxyInfoTargetHost'></span>
-                br
-                strong targetPort:
-                |  <span id='proxyInfoTargetPort'></span>
+                strong Latency:
+                |  <span id='proxyInfoLatency'></span>
+                
         // /PROXY INFO
 
         // PROXY LIST
@@ -29,10 +27,9 @@ block content
         #proxyList
             table
                 thead
-                    th proxyHost
-                    th proxyPort
-                    th targetHost
-                    th targetPort
+                    th ProxyURL
+                    th TargetURL
+                    th Latency
                     th Delete?
                 tbody
         // /PROXY LIST
@@ -41,11 +38,11 @@ block content
         h2 Add Simple Proxy
         #addProxy
             fieldset
-                input#inputProxyHost(type='text', placeholder='Proxy Host')
-                input#inputProxyPort(type='text', placeholder='Port')
+                input#inputProxyURL(type='text', placeholder='Proxy URL')
                 br
-                input#inputProxyTargetHost(type='text', placeholder='Target Host')
-                input#inputProxyTargetPort(type='text', placeholder='Target Port')
+                input#inputProxyTargetURL(type='text', placeholder='Target URL')
+                br
+                input#inputLatency(type='text', placeholder='Latency') 
                 br
                 button#btnAddProxy Add Proxy
         // /ADD PROXY

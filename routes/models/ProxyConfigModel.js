@@ -1,6 +1,10 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var ProxyConfig = new Schema({url : [], client : String, latency: String, hash: String});
+var simpleproxy = new Schema({targeturl: String, proxyurl: String, latency: String});
 
-module.exports = mongoose.model("ProxyDB", ProxyConfig) 
+var loadbalance = new Schema({targeturl: [], proxyurl: String, latency: String})
+
+var ProxyConfig = new Schema({clientid: String, email: String, password: String, Simpleproxy: [simpleproxy], Loadbalance: [loadbalance]});
+
+module.exports = mongoose.model("ProxyDB", ProxyConfig)

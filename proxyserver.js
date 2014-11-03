@@ -2,57 +2,125 @@ var arguments = process.argv.splice(2);
 var httpProxy = require('http-proxy');
 var http = require('http');
 var crypto = require('crypto');
+var express = require('express');
+var app = express();
+var	bodyParser = require('body-parser');
 
 
+var router = express.Router();
 var target;
+var targeturl;
 var latency;
 var Request;
 var Response;
-var array;
-var originalhash;
-//target = {target : "http://localhost:8001"};
-
-var ProxyConfig = require("./proxyconfdb");
-var mongoose = require("mongoose");
-mongoose.connect("mongodb://ashishsjsu:ashishsjsu@novus.modulusmongo.net:27017/iQeg2igi");
 
 
-ProxyConfig.find(function(err, dbobj){
-	if(err)
-		console.log(err)
-	console.log("hahahah")
-	array = dbobj[0].url;
-	console.log(array);
-	latency = dbobj[0].latency;
-	originalhash = dbobj[0].hash;	
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+
+app.use('/proxyserver', router);
+
+router.use(function(req, res, next){
+	console.log("Proxyserver middleware...");
+	next();
 });
 
-var callback = function(){
 
-	ProxyConfig.find(function(err, obj){
+var ProxyConfig = require("./routes/models/ProxyConfigModel");
+var mongoose = require("mongoose");
+var dbURI = "mongodb://ashishsjsu:ashishsjsu@novus.modulusmongo.net:27017/iQeg2igi";
+mongoose.connect(dbURI);
+
+
+	// CONNECTION EVENTS
+	// When successfully connected
+	mongoose.connection.on('connected', function () {
+	  console.log('Mongoose default connection open to ' + dbURI);
+	});
+	 
+	// If the connection throws an error
+	mongoose.connection.on('error',function (err) {
+    console.log('Mongoose default connection error: ' + err);
+	});
+	 
+	// When the connection is disconnected
+	mongoose.connection.on('disconnected', function () {
+	  console.log('Mongoose default connection disconnected');
+	});
+
+
+router.route('/createproxy')
+
+	.post(function(req, res){
+
+		res.end("creating proxy server");
+		console.log(req.body.url);
+		targeturl  = req.body.url;
+		latency = req.body.latency;
+		createProxyServer();
+	});
+
+
+router.route('/createproxy/:client_id')
+	
+	.get(function(req, res){
+		
+		var proxy = httpProxy.createProxy();
+		res.end("creating proxy server");
+
+		ProxyConfig.find({"client": req.params.client_id}, function(err, dbobj){
 			if(err)
-				console.log(err);
-			
-				var string = obj[0].url + obj[0].latency; 
-				var newhash = crypto.createHash('md5').update(string, 'utf8').digest('hex');
+				console.log(err)
+			console.log("Received data...")
+			targeturl = dbobj[0].url;
+			console.log(array);
+			latency = dbobj[0].latency;
+			createProxyServer();
+		})
 
-				if(originalhash == newhash)
-				{
-				//	console.log("hooorrraayyy");
-				}
-				else
-				{
-				originalhash = newhash;
-				array = obj[0].url;
-				latency = obj[0].latency;
-				}
-			
-			//console.log(array);
-			//console.log(obj[0].url);
-		});
+	})
+
+	.put(function(req, res){
+
+		console.log("PUTTTT "+req.body.url);
+		targeturl = req.body.url;
+		latency = req.body.latency;
+	});
+
+
+
+app.listen(8006);
+console.log("Listening on 8006");
+
+
+var proxy = httpProxy.createProxy();
+
+function createProxyServer(){
+
+	http.createServer(function (req, res) {
+
+		if(req.url === '/favicon.ico')
+		{
+			console.log("favicon disabled");
+			res.end();
+			return;
+		}
+
+		console.log(targeturl);
+		target = {target : targeturl} 
+
+		if(latency > 0)
+		{
+			latentProxy();
+		}
+		else
+		{
+    	 	console.log('forwarding request to: ', target.target);
+			proxy.web(req, res, target);
+	
+		}
+	}).listen(8005);
 }
-
-var interval = setInterval(callback, 6000);
 
 
 function latentProxy(req, res){
@@ -63,38 +131,3 @@ function latentProxy(req, res){
 			}, latency);
 }
 
-var proxy = httpProxy.createProxy();
-
-		http.createServer(function (req, res) {
-				
-		Request = req;
-		Response =  res;
-
-		req.socket.on("error", function(){
-			console.log(err);
-		});
-
-		if(req.url === '/favicon.ico')
-		{
-			console.log("favicon disabled");
-			res.end();
-			return;
-		}
-
-		target = {target : array.shift()};
-		console.log(array);
-		if(latency > 0)
-		{
-			latentProxy(Request, Response);	
-		}
-		else
-		{
-    		console.log('forwarding request to: ', target.target);
-			proxy.web(req, res, target);
-			//console.log(target.target);
-			array.push(target.target)
-			console.log(array)
-		}
-		
-
-}).listen(8005);

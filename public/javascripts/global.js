@@ -27,7 +27,7 @@ function populateTable() {
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON( '/proxys/proxylist', function( data ) {
+    $.getJSON( '/api/simpleproxy/1', function( data ) {
 
         // Stick our user data array into a userlist variable in the global object
         proxyListData = data;
@@ -35,10 +35,10 @@ function populateTable() {
         // For each item in our JSON, add a table row and cells to the content string
         $.each(data, function(){
             tableContent += '<tr>';
-            tableContent += '<td><a href="#" class="linkshowproxy" rel="' + this.proxyHost + '" title="Show Details">' + this.proxyHost + '</a></td>';
-            tableContent += '<td>' + this.port + '</td>';
-            tableContent += '<td>' + this.targetHost + '</td>';
-            tableContent += '<td>' + this.targetPort + '</td>';
+            tableContent += '<td><a href="#" class="linkshowproxy" rel="' + this.Simpleproxy[0].proxyurl + '" title="Show Details">' + this.Simpleproxy[0].proxyurl + '</a></td>';
+           // tableContent += '<td>' + this.port + '</td>';
+            tableContent += '<td>' + this.Simpleproxy[0].targeturl + '</td>';
+            tableContent += '<td>' + this.Simpleproxy[0].latency + '</td>';
             tableContent += '<td><a href="#" class="linkdeleteproxy" rel="' + this._id + '">delete</a></td>';
             tableContent += '</tr>';
         });
@@ -58,17 +58,15 @@ function showProxyInfo(event) {
     var thisProxyHost = $(this).attr('rel');
 
     // Get Index of object based on id value
-    var arrayPosition = proxyListData.map(function(arrayItem) { return arrayItem.proxyHost; }).indexOf(thisProxyHost);
+    var arrayPosition = proxyListData.map(function(arrayItem) { return arrayItem.proxyurl; }).indexOf(thisProxyHost);
 
     // Get our User Object
     var thisProxyObject = proxyListData[arrayPosition];
 
     //Populate Info Box
-    $('#proxyInfoProxyHost').text(thisProxyObject.proxyHost);
-    $('#proxyInfoPort').text(thisProxyObject.port);
-    $('#proxyInfoTargetHost').text(thisProxyObject.targetHost);
-    $('#proxyInfoTargetPort').text(thisProxyObject.targetPort);
-
+    $('#proxyInfoProxyURL').text(thisProxyObject.proxyurl);
+    $('#proxyInfoTargetURL').text(thisProxyObject.targeturl);
+    $('#proxyInfoLatency').text(thisProxyObject.latency);
 };
 
 // Add User
@@ -86,17 +84,16 @@ function addProxy(event) {
 
         // If it is, compile all proxy info into one object
         var newProxy = {
-            'proxyHost': $('#addProxy fieldset input#inputProxyHost').val(),
-            'port': $('#addProxy fieldset input#inputProxyPort').val(),
-            'targetHost': $('#addProxy fieldset input#inputProxyTargetHost').val(),
-            'targetPort': $('#addProxy fieldset input#inputProxyTargetPort').val()
+            'proxyurl': $('#addProxy fieldset input#inputProxyURL').val(),
+            'targeturl': $('#addProxy fieldset input#inputProxyTargetURL').val(),
+            'latency': $('#addProxy fieldset input#inputLatency').val(),
         }
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
             data: newProxy,
-            url: '/proxys/addProxy',
+            url: '/api/simpleproxy',
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -120,7 +117,7 @@ function addProxy(event) {
     }
     else {
         // If errorCount is more than 0, error out
-        alert('Please fill in all fields');
+        alert('Please fill in all the fields');
         return false;
     }
 };
@@ -136,10 +133,11 @@ function deleteProxy(event) {
     // Check and make sure the user confirmed
     if (confirmation === true) {
 
+       var id =  $(this).attr('rel');
         // If they did, do our delete
         $.ajax({
             type: 'DELETE',
-            url: '/proxys/deleteProxy/' + $(this).attr('rel')
+            url: '/api/simpleproxy/' + id
         }).done(function( response ) {
 
             // Check for a successful (blank) response
