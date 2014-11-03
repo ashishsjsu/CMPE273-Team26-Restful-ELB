@@ -1,0 +1,53 @@
+extends layout
+
+block content
+    h1= title
+    p Simple Proxy Configuration
+
+    // Wrapper
+    #wrapper
+
+        // PROXY INFO
+        #proxyInfo
+            h2 Proxy Info
+            p
+                strong proxyHost:
+                |  <span id='proxyInfoProxyHost'></span>
+                br
+                strong Port:
+                |  <span id='proxyInfoPort'></span>
+                br
+                strong targetHost:
+                |  <span id='proxyInfoTargetHost'></span>
+                br
+                strong targetPort:
+                |  <span id='proxyInfoTargetPort'></span>
+        // /PROXY INFO
+
+        // PROXY LIST
+        h2 Proxy List
+        #proxyList
+            table
+                thead
+                    th proxyHost
+                    th proxyPort
+                    th targetHost
+                    th targetPort
+                    th Delete?
+                tbody
+        // /PROXY LIST
+
+        // ADD PROXY
+        h2 Add Simple Proxy
+        #addProxy
+            fieldset
+                input#inputProxyHost(type='text', placeholder='Proxy Host')
+                input#inputProxyPort(type='text', placeholder='Port')
+                br
+                input#inputProxyTargetHost(type='text', placeholder='Target Host')
+                input#inputProxyTargetPort(type='text', placeholder='Target Port')
+                br
+                button#btnAddProxy Add Proxy
+        // /ADD PROXY
+
+    // /WRAPPER
