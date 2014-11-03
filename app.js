@@ -32,15 +32,13 @@ router.use(function(req, res, next){
 	console.log("Something is happening...");
 	next();
 });
-
-
-router.route('/simpleproxy')
 	
-	 //post configuration parameters
+router.route('/simpleproxy/:id')
+	//post configuration parameters
 	.post(api.addProxyConfiguration);
 
-
 router.route('/simpleproxy/:id')
+
 	//get configuration parameters
 	.get(api.getProxyConfiguration)
 
@@ -49,6 +47,13 @@ router.route('/simpleproxy/:id')
 
 	//delete proxy configuration
 	.delete(api.deleteProxyConfiguration);
+
+router.route('/addUser')
+	//post configuration parameters
+	.post(api.addUser)
+
+router.route('/getUsers')
+	.get(api.getAllUsers);
 
 
 //Register our routes

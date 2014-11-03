@@ -9,17 +9,27 @@ block content
 
         // PROXY INFO
         #proxyInfo
-            h2 Proxy Info
-            p
-                strong ProxyURL:
-                |  <span id='proxyInfoProxyURL'></span>
-                br
-                strong TargetURL:
-                |  <span id='proxyInfoTargetURL'></span>
-                br
-                strong Latency:
-                |  <span id='proxyInfoLatency'></span>
-                
+            h2 Proxy Info Update
+            #updateProxy
+                fieldset
+                    strong Proxy ID:
+                    |  <span id='proxyID'></span>
+                    br
+                    lable
+                    |  ProxyURL: 
+                    input#updateProxyURL(type='text', placeholder='Proxy URL')
+                    br
+                    lable
+                    |  TargetURL: 
+                    input#updateProxyTargetURL(type='text', placeholder='Target URL')
+                    br
+                    lable
+                    |  Latency: 
+                    input#updateProxyLatency(type='text', placeholder='Latency')
+                    br
+                    button#btnUpdateProxy Update Proxy
+                    button#btnStartProxy Start Proxy
+                    button#btnStopProxy Stop Proxy
         // /PROXY INFO
 
         // PROXY LIST
