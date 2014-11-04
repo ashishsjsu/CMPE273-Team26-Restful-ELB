@@ -86,6 +86,7 @@ function showProxyInfo(event) {
 function addProxy(event) {
     event.preventDefault();
 
+
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
     $('#addProxy input').each(function(index, val) {
@@ -153,23 +154,38 @@ function stopProxyServer(){
 
 function startProxyServer(){
 
-    var data = {
-        'targeturl' : $('#updateProxy fieldset input#updateProxyTargetURL').val(),
-        'latency' : $('#updateProxy fieldset input#updateProxyLatency').val()
-    }
+    var errorCount = 0;
+    $('#updateProxy input').each(function(index, val) {
+        if($(this).val() === '') { errorCount++; }
+    });
 
-    alert("in startProxyServer :" + "targeturl " + data.targeturl + "latency " + data.latency);
+    if(errorCount == 0)
+    {
 
-    $.ajax({
+         var data = {
+             'targeturl' : $('#updateProxy fieldset input#updateProxyTargetURL').val(),
+             'latency' : $('#updateProxy fieldset input#updateProxyLatency').val()
+         }
+
+        alert("in startProxyServer :" + "targeturl " + data.targeturl + "latency " + data.latency);
+
+
+        $.ajax({
              type : 'POST',
              data : data,
              url : 'http://localhost:8006/proxyserver/createproxy',
              dataType : 'JSON'
 
-    }).done(function(response){
+        }).done(function(response){
 
             alert(response.msg);
-    });
+        });
+    }
+
+    else
+    {
+        alert("Please select a proxy configuration from the list");
+    }
 }
 
 
@@ -222,7 +238,7 @@ function updateProxy(event) {
             }
         });
 
-         $.ajax({
+        $.ajax({
              type : 'PUT',
              data : newProxy,
              url : 'http://localhost:8006/proxyserver/createproxy/1',
@@ -231,7 +247,7 @@ function updateProxy(event) {
 
             alert(response.msg);
             });
-
+        
 
     }
     else {
@@ -276,6 +292,8 @@ function deleteProxy(event) {
             populateTable();
 
         });
+
+        stopProxyServer();
 
     }
     else {

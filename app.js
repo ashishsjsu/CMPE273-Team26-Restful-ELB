@@ -5,6 +5,7 @@ var express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
 	crypto = require('crypto'),
+	ejs = require('ejs'),
 	api = require('./routes/api');
 	path = require('path');
 
@@ -14,7 +15,7 @@ var routes = require('./routes/index');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
