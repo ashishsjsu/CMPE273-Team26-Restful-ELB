@@ -1,6 +1,6 @@
 
 //connect to database
-var ProxyConfig = require("./models/ProxyConfigModel");
+var ProxyConfig = require("../models/ProxyConfigModel");
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://ashishsjsu:ashishsjsu@novus.modulusmongo.net:27017/iQeg2igi");
 
