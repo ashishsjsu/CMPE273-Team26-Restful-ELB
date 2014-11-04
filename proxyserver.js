@@ -31,7 +31,7 @@ router.use(function(req, res, next){
 });
 
 
-var ProxyConfig = require("./routes/models/ProxyConfigModel");
+var ProxyConfig = require("../models/ProxyConfigModel");
 var mongoose = require("mongoose");
 var dbURI = "mongodb://ashishsjsu:ashishsjsu@novus.modulusmongo.net:27017/iQeg2igi";
 mongoose.connect(dbURI);
