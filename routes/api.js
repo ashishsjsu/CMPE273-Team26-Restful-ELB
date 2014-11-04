@@ -25,7 +25,6 @@ exports.addProxyConfiguration = function(req, res){
 
 		});
 				
-		//addProxyConfig(req.body.targeturl, req.body.latency);
 }
 
 
@@ -110,51 +109,4 @@ exports.deleteProxyConfiguration = function(req, res){
 			  		res.send( (err === null) ? { msg: '' } : { msg: err });
 				});
 		});
-}
-
-
-/*function updateProxyConfig(URL, LATENCY, clientId){
-	client = new Client();
-
-	var args = {
-			data: {url: URL, latency: LATENCY},
-			headers: {"Content-Type": "application/json"}
-		};
-
-	client.put('http://localhost:8006/proxyserver/createproxy/'+clientId, args, function(data, response){
-		console.log(data);
-	});
-
-}
-*/
-/*
-function addProxyConfig(URL, LATENCY){
-
-	client = new Client();
-	
-	var args = {
-		data: { url: URL, latency: LATENCY},
-		headers:{"Content-Type": "application/json"} 
-	};
-
-	console.log(args);
-
-	client.post('http://localhost:8006/proxyserver/createproxy', args, function(data, response){
-		console.log(data);
-	});
-}*/
-
-function startSimpleProxyServer(targetURL, LATENCY){
-
-	client = new Client();
-
-	var args = {
-		configuration_params : { url : targetURL, latency : LATENCY},
-		headers : {"Content-Type" : "application/json"}
-	}
-	console.log(args);
-
-	client.post('http://localhost:8006/proxyserver/createproxy', args, function(data, response){
-		console.log("In POST:" +data);
-	});
 }

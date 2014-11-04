@@ -28,43 +28,6 @@ $(document).ready(function() {
 });
 
 
-function stopProxyServer(){
-
-    
-    $.ajax({
-             type : 'DELETE',
-             data: '',
-             url : 'http://localhost:8006/proxyserver/createproxy/1',
-             dataType : 'JSON'
-
-    }).done(function(response){
-
-            alert(response.msg);
-    });    
-}
-
-function startProxyServer(){
-
-    var data = {
-        'targeturl' : $('#updateProxy fieldset input#updateProxyTargetURL').val(),
-        'latency' : $('#updateProxy fieldset input#updateProxyLatency').val()
-    }
-
-    alert("in startProxyServer :" + "targeturl " + data.targeturl + "latency " + data.latency);
-
-    $.ajax({
-             type : 'POST',
-             data : data,
-             url : 'http://localhost:8006/proxyserver/createproxy',
-             dataType : 'JSON'
-
-    }).done(function(response){
-
-            alert(response.msg);
-    });
-}
-
-
 // Functions =============================================================
 
 // Fill table with data
@@ -171,7 +134,46 @@ function addProxy(event) {
     }
 };
 
-// Add User
+
+
+function stopProxyServer(){
+
+    
+    $.ajax({
+             type : 'DELETE',
+             data: '',
+             url : 'http://localhost:8006/proxyserver/createproxy/1',
+             dataType : 'JSON'
+
+    }).done(function(response){
+
+            alert(response.msg);
+    });    
+}
+
+function startProxyServer(){
+
+    var data = {
+        'targeturl' : $('#updateProxy fieldset input#updateProxyTargetURL').val(),
+        'latency' : $('#updateProxy fieldset input#updateProxyLatency').val()
+    }
+
+    alert("in startProxyServer :" + "targeturl " + data.targeturl + "latency " + data.latency);
+
+    $.ajax({
+             type : 'POST',
+             data : data,
+             url : 'http://localhost:8006/proxyserver/createproxy',
+             dataType : 'JSON'
+
+    }).done(function(response){
+
+            alert(response.msg);
+    });
+}
+
+
+
 function updateProxy(event) {
     event.preventDefault();
 
