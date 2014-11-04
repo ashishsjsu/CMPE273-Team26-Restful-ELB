@@ -19,7 +19,51 @@ $(document).ready(function() {
     // Delete proxy link click
     $('#proxyList table tbody').on('click', 'td a.linkdeleteproxy', deleteProxy);
 
+    //start proxy server button click
+    $('#btnStartProxy').on('click', startProxyServer);
+
+    //stop proxy server 
+    $('#btnStopProxy').on('click', stopProxyServer);
+
 });
+
+
+function stopProxyServer(){
+
+    
+    $.ajax({
+             type : 'DELETE',
+             data: '',
+             url : 'http://localhost:8006/proxyserver/createproxy/1',
+             dataType : 'JSON'
+
+    }).done(function(response){
+
+            alert(response.msg);
+    });    
+}
+
+function startProxyServer(){
+
+    var data = {
+        'targeturl' : $('#updateProxy fieldset input#updateProxyTargetURL').val(),
+        'latency' : $('#updateProxy fieldset input#updateProxyLatency').val()
+    }
+
+    alert("in startProxyServer :" + "targeturl " + data.targeturl + "latency " + data.latency);
+
+    $.ajax({
+             type : 'POST',
+             data : data,
+             url : 'http://localhost:8006/proxyserver/createproxy',
+             dataType : 'JSON'
+
+    }).done(function(response){
+
+            alert(response.msg);
+    });
+}
+
 
 // Functions =============================================================
 
@@ -175,6 +219,18 @@ function updateProxy(event) {
 
             }
         });
+
+         $.ajax({
+             type : 'PUT',
+             data : newProxy,
+             url : 'http://localhost:8006/proxyserver/createproxy/1',
+             dataType : 'JSON'
+             }).done(function(response){
+
+            alert(response.msg);
+            });
+
+
     }
     else {
         // If errorCount is more than 0, error out

@@ -1,10 +1,10 @@
 var arguments = process.argv.splice(2);
-var httpProxy = require('http-proxy');
-var http = require('http');
-var crypto = require('crypto');
-var express = require('express');
-var app = express();
-var	bodyParser = require('body-parser');
+var httpProxy = require('http-proxy'),
+ 	http = require('http'),
+  	express = require('express'),
+  	cors = require('cors'),
+  	app = express(),
+    bodyParser = require('body-parser');
 
 
 var router = express.Router();
@@ -13,13 +13,18 @@ var targeturl;
 var latency;
 var Request;
 var Response;
+var errMsg=null;
 
+//configure app to use CORS
+app.use(cors());
 
+//configure app to use bodyparser
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 app.use('/proxyserver', router);
 
+//app middleware
 router.use(function(req, res, next){
 	console.log("Proxyserver middleware...");
 	next();
@@ -53,17 +58,19 @@ router.route('/createproxy')
 
 	.post(function(req, res){
 
-		res.end("creating proxy server");
-		console.log(req.body.url);
-		targeturl  = req.body.url;
+		targeturl  = req.body.targeturl;
 		latency = req.body.latency;
+		console.log("Parameters received: "+ targeturl + " " + latency);
 		createProxyServer();
+
+		res.json({msg : "Created"});
+		
 	});
 
 
 router.route('/createproxy/:client_id')
 	
-	.get(function(req, res){
+	/*.get(function(req, res){
 		
 		var proxy = httpProxy.createProxy();
 		res.end("creating proxy server");
@@ -78,15 +85,22 @@ router.route('/createproxy/:client_id')
 			createProxyServer();
 		})
 
-	})
-
+	})*/
+	
+	
 	.put(function(req, res){
 
 		console.log("PUTTTT "+req.body.url);
-		targeturl = req.body.url;
+		targeturl = req.body.targeturl;
 		latency = req.body.latency;
-	});
 
+		res.json({msg : "Configuration updated"})
+	})
+
+	.delete(function(req, res){
+		server.close();
+		res.json({msg : "Proxy stopped"});
+	});
 
 
 app.listen(8006);
@@ -95,9 +109,11 @@ console.log("Listening on 8006");
 
 var proxy = httpProxy.createProxy();
 
+var server;
+
 function createProxyServer(){
 
-	http.createServer(function (req, res) {
+	server = http.createServer(function (req, res) {
 
 		if(req.url === '/favicon.ico')
 		{
@@ -107,27 +123,33 @@ function createProxyServer(){
 		}
 
 		console.log(targeturl);
+	
+		//set the target for proxy
 		target = {target : targeturl} 
+
+		console.log("target: " +target);
 
 		if(latency > 0)
 		{
-			latentProxy();
-		}
-		else
-		{
-    	 	console.log('forwarding request to: ', target.target);
-			proxy.web(req, res, target);
-	
-		}
-	}).listen(8005);
-}
-
-
-function latentProxy(req, res){
-	setTimeout(function()
+			setTimeout(function()
 			{
 				console.log('forwarding request with latency: ', target.target);
 				proxy.web(req, res, target);
 			}, latency);
+		}
+		else
+		{
+    	 	console.log('forwarding request to: ', target.target);
+			proxy.web(req, res, target);	
+		}
+
+	}).listen(8005);
+
+		process.on('uncaughtException', function(err){
+			if(err.errno === 'EADDRINUSE')
+				console.log("Port already in use");
+			   errMsg = "Port already in use";
+			});
 }
+
 

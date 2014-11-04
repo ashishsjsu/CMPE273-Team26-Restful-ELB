@@ -1,9 +1,8 @@
-var crypto = require('crypto');
 
 //connect to database
 var ProxyConfig = require("./models/ProxyConfigModel");
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/nodetest2");
+mongoose.connect("mongodb://ashishsjsu:ashishsjsu@novus.modulusmongo.net:27017/iQeg2igi");
 
 var Client = require('node-rest-client').Client;
 
@@ -113,7 +112,8 @@ exports.deleteProxyConfiguration = function(req, res){
 		});
 }
 
-function updateProxyConfig(URL, LATENCY, clientId){
+
+/*function updateProxyConfig(URL, LATENCY, clientId){
 	client = new Client();
 
 	var args = {
@@ -126,8 +126,8 @@ function updateProxyConfig(URL, LATENCY, clientId){
 	});
 
 }
-
-
+*/
+/*
 function addProxyConfig(URL, LATENCY){
 
 	client = new Client();
@@ -141,5 +141,20 @@ function addProxyConfig(URL, LATENCY){
 
 	client.post('http://localhost:8006/proxyserver/createproxy', args, function(data, response){
 		console.log(data);
+	});
+}*/
+
+function startSimpleProxyServer(targetURL, LATENCY){
+
+	client = new Client();
+
+	var args = {
+		configuration_params : { url : targetURL, latency : LATENCY},
+		headers : {"Content-Type" : "application/json"}
+	}
+	console.log(args);
+
+	client.post('http://localhost:8006/proxyserver/createproxy', args, function(data, response){
+		console.log("In POST:" +data);
 	});
 }
