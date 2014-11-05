@@ -30,7 +30,6 @@ app.use(bodyParser.json());
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
-	 getProxyIP();
 	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -80,10 +79,11 @@ router.route('/createproxy')
 		targeturl  = req.body.targeturl;
 		latency = req.body.latency;
 		//console.log("Parameters received: "+ targeturl + " " + latency);
+		var ip = getProxyIP();
 		var portnumber = generatePortNumber();
 		createProxyServer(portnumber);
 		//res.json({msg : "Proxyserver running on port " + portnumber, port : portnumber});
-		res.json({msg : "Proxyserver running on port " + portnumber, port: portnumber});
+		res.json({msg : "Proxyserver running on host " +ip+ "port " + portnumber, port: ip+":"+portnumber});
 	});
 
 

@@ -7,9 +7,8 @@ var express = require('express'),
 	crypto = require('crypto'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
-	path = require('path'),
-	Client = require('node-rest-client').Client;
-
+	path = require('path');
+	
 var port = process.env.port || 8080; 
 
 var routes = require('./routes/index');
@@ -26,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
-	 getProxyIP();
 	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -35,21 +33,6 @@ app.all('*', function(req, res, next){
 	if ('OPTIONS' == req.method) return res.sendStatus(200);
 	next();
 });
-
-
-function getProxyIP()
-{
-	var client = new Client();
-
-	console.log("In getProxyIP");
-
-	client.get('http://169.254.169.254/latest/meta-data/public-ipv4/', function(data, response){
-		console.log(data);
-
-		console.log(response);
-	});
-
-}
 
 
 //Routes for our API
