@@ -4,7 +4,7 @@ var httpProxy = require('http-proxy'),
   	express = require('express'),
   	app = express(),
     bodyParser = require('body-parser'),
-    os = require('os');
+    Client = require('node-rest-client').Client;
 
 
 var router = express.Router();
@@ -21,6 +21,7 @@ var targetarray;
 
 
 
+
 //configure app to use bodyparser
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ app.use(bodyParser.json());
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
+	 getProxyIP();
 	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -117,6 +119,8 @@ router.route('/createloadbalancer')
 		targetarray = req.body.targets;
 		console.log(targetarray);
 
+		getProxyIP();
+
 		var portnumber = generatePortNumber();
 		createLoadBalancer(portnumber);
 		res.json({msg : "Load balanced server running on port " + portnumber});
@@ -127,6 +131,21 @@ router.route('/createloadbalancer')
 app.listen(8006);
 console.log("Listening on 8006");
 
+
+
+function getProxyIP()
+{
+	var client = new Client();
+
+	console.log("In getProxyIP");
+
+	client.get('http://169.254.169.254/latest/meta-data/public-ipv4/', function(data, response){
+		console.log(data);
+
+		console.log(response);
+	});
+
+}
 
 
 var loadProxy = httpProxy.createProxy();

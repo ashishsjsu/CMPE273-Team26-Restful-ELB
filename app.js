@@ -7,7 +7,8 @@ var express = require('express'),
 	crypto = require('crypto'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
-	path = require('path');
+	path = require('path'),
+	Client = require('node-rest-client').Client;
 
 var port = process.env.port || 8080; 
 
@@ -22,14 +23,34 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//configure app to use CORS
+//configure app for cross-origin requests
+app.all('*', function(req, res, next){
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+	 getProxyIP();
+	console.log("In app all");
+	if (!req.get('Origin')) return next();
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+	if ('OPTIONS' == req.method) return res.sendStatus(200);
+	next();
 });
+
+
+function getProxyIP()
+{
+	var client = new Client();
+
+	console.log("In getProxyIP");
+
+	client.get('http://169.254.169.254/latest/meta-data/public-ipv4/', function(data, response){
+		console.log(data);
+
+		console.log(response);
+	});
+
+}
+
 
 //Routes for our API
 var router = express.Router();
