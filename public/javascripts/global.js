@@ -248,7 +248,7 @@ function updateProxy(event) {
         $.ajax({
              type : 'PUT',
              data : newProxy,
-             url : 'http://localhost:8006/proxyserver/createproxy/1',
+             url : 'http://54.183.158.108:8006/proxyserver/createproxy/1',
              dataType : 'JSON'
              }).done(function(response){
 
@@ -279,7 +279,7 @@ function deleteProxy(event) {
            $.ajax({
                  type : 'DELETE',
                  data: '',
-                 url : 'http://localhost:8006/proxyserver/createproxy/1',
+                 url : 'http://54.183.158.108:8006/proxyserver/createproxy/1',
                  dataType : 'JSON'
 
         }).done(function(response){
@@ -337,7 +337,7 @@ function stopProxyServer(){
         $.ajax({
                  type : 'DELETE',
                  data: '',
-                 url : 'http://localhost:8006/proxyserver/createproxy/1',
+                 url : 'http://54.183.158.108:8006/proxyserver/createproxy/1',
                  dataType : 'JSON'
 
         }).done(function(response){
@@ -382,7 +382,7 @@ function startProxyServer(){
         $.ajax({
              type : 'POST',
              data : data,
-             url : 'http://localhost:8006/proxyserver/createproxy',
+             url : 'http://54.183.158.108:8006/proxyserver/createproxy',
              dataType : 'JSON'
 
         }).done(function(response){

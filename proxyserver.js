@@ -78,12 +78,11 @@ router.route('/createproxy')
 
 		targeturl  = req.body.targeturl;
 		latency = req.body.latency;
-		//console.log("Parameters received: "+ targeturl + " " + latency);
-		var ip = getProxyIP();
+		
 		var portnumber = generatePortNumber();
 		createProxyServer(portnumber);
 		//res.json({msg : "Proxyserver running on port " + portnumber, port : portnumber});
-		res.json({msg : "Proxyserver running on host " +ip+ "port " + portnumber, port: ip+":"+portnumber});
+		res.json({msg : "Proxyserver running on " + "54.183.158.108" + portnumber, port: "54.183.158.108" + portnumber});
 	});
 
 
@@ -118,8 +117,6 @@ router.route('/createloadbalancer')
 		console.log("in /createloadbalancer");
 		targetarray = req.body.targets;
 		console.log(targetarray);
-
-		getProxyIP();
 
 		var portnumber = generatePortNumber();
 		createLoadBalancer(portnumber);
