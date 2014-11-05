@@ -2,9 +2,9 @@ var arguments = process.argv.splice(2);
 var httpProxy = require('http-proxy'),
  	http = require('http'),
   	express = require('express'),
-  	cors = require('cors'),
   	app = express(),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    os = require('os');
 
 
 var router = express.Router();
@@ -19,12 +19,25 @@ var loadbalancedserver;
 var targetarray;
 
 
-//configure app to use CORS
-app.use(cors());
+
 
 //configure app to use bodyparser
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+
+
+//configure app for cross-origin requests
+app.all('*', function(req, res, next){
+
+	console.log("In app all");
+	if (!req.get('Origin')) return next();
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+	if ('OPTIONS' == req.method) return res.sendStatus(200);
+	next();
+});
+
 
 app.use('/proxyserver', router);
 
@@ -67,8 +80,8 @@ router.route('/createproxy')
 		//console.log("Parameters received: "+ targeturl + " " + latency);
 		var portnumber = generatePortNumber();
 		createProxyServer(portnumber);
-		res.json({msg : "Proxyserver running on port " + portnumber, port : portnumber});
-		
+		//res.json({msg : "Proxyserver running on port " + portnumber, port : portnumber});
+		res.json({msg : "Proxyserver running on port " + portnumber, port: portnumber});
 	});
 
 
