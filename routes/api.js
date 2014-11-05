@@ -8,29 +8,40 @@ var Client = require('node-rest-client').Client;
 
 var targetArray = [];
 
+//new config post
 exports.addProxyConfiguration = function(req, res){
-		ProxyConfig.findOne({"clientid": req.params.id}, function(err, proxydb){
+		ProxyConfig.findOne({"clientid": req.params.userid}, function(err, proxydb){
 			if(err)
 				res.send(err);
 			
-			console.log("in GET");
+			var count = 0;	
+	
+			if(proxydb != null)
+			{
+				proxydb.Simpleproxy.forEach(function(item){
+					count++;
+				})
+			
+				proxydb.Simpleproxy.push({configid: ++count  ,targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency});
 
-			proxydb.Simpleproxy.push({ targeturl: req.body.targeturl, proxyurl: req.body.proxyurl, latency: req.body.latency});
-
-			proxydb.save(function(err, data){
-				if(err) 
+				proxydb.save(function(err, data){
+					if(err) 
 					res.send(err);
-			  	res.send( (err === null) ? { msg: '' } : { msg: err });
-			});
-
-		});
+			 	 	res.send( (err === null) ? { msg: '' } : { msg: err });
+				});
 				
-}
+			}
+			else{
+				res.send( (err === null) ? { msg: 'User does not exist' } : { msg: err });
+			}
+		});
+}	
+
 
 
 exports.getProxyConfiguration = function(req, res){
 
-		ProxyConfig.findOne( { "clientid" : req.params.id }, function(err, dbObj){
+		ProxyConfig.findOne( { "clientid" : req.params.userid }, function(err, dbObj){
 			if(err)
 				res.send(err);
 			
@@ -43,17 +54,31 @@ exports.getProxyConfiguration = function(req, res){
 
 exports.addUser = function(req, res){
 		
+
+		ProxyConfig.find({}, function(err, proxydb){
+			if(err)
+				res.send(err);
+
+			var count = 0;
+
+			if(proxydb != null){
+				proxydb.forEach(function(item){
+					count++;
+				})
+			}
+
 		var proxydb = new ProxyConfig;
-		
-		proxydb.email = "abc@example.org";
-		proxydb.password = "abc";
-		proxydb.clientid = "1";
+
+		proxydb.email = req.body.email;
+		proxydb.password = req.body.password;
+		proxydb.clientid = "U-" + count++;
 		console.log(proxydb);
 		proxydb.save(function(err, data){
 			if(err) 
 				res.send(err);	
 			  res.send( (err === null) ? { msg: data } : { msg: err });
-		});		
+		});	
+	});	
 }
 
 exports.getAllUsers = function(req, res){
@@ -61,52 +86,81 @@ exports.getAllUsers = function(req, res){
 		ProxyConfig.find( {}, function(err, dbObj){
 			if(err)
 				res.send(err);
-			
-			console.log("in GET");
 			res.json(dbObj);
 		});
 }
 
 
 exports.updateProxyConfiguration = function(req, res){
-	ProxyConfig.findOne({"clientid": req.params.id}, function(err, proxydb){
-			if(err)
-				res.send(err);
 
-			function removeProxy(element) {
-  			return element._id != req.body.id;
-			}
-			var temp = proxydb.Simpleproxy.filter(removeProxy);
 
-			proxydb.Simpleproxy = temp
-			proxydb.Simpleproxy.push({ _id:req.body.id, targeturl: req.body.targeturl, proxyurl: req.body.proxyurl, latency: req.body.latency});
-        	proxydb.save(function(err, data){
-					if(err) 
-						res.send(err);	
-			  		res.send( (err === null) ? { msg: '' } : { msg: err });
-				});
-		});
-	
+	var query = {"clientid" : req.params.userid};
+	var update = { $pull : { Simpleproxy : {configid: req.params.configid}}};
+
+	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+
+	var proxyurl = req.body.proxyurl;
+
+	console.log("proxyurl : " +proxyurl);
+
+	var query = {"clientid" : req.params.userid};
+	var update = { $push : { Simpleproxy : { targeturl : req.body.targeturl, proxyurl: req.body.proxyurl, latency : req.body.latency, configid: req.params.configid}}};
+
+		ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+				res.send( (err === null) ? { msg: '' } : { msg: err });
+
+		})
+	})
+
 }
 
 exports.deleteProxyConfiguration = function(req, res){
 
 
-		ProxyConfig.findOne({"clientid": req.params.id}, function(err, proxydb){
+	var query = {"clientid" : req.params.userid};
+	var update = { $pull : { Simpleproxy : {configid: req.params.configid}}};
+
+	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+			res.send( (err === null) ? { msg: '' } : { msg: err });
+
+	})
+}
+
+
+exports.addLoadBalancerConfiguration = function(req, res){
+
+	ProxyConfig.findOne({"clientid": req.params.userid}, function(err, proxydb){
 			if(err)
 				res.send(err);
+	
 
-			function removeProxy(element) {
-				console.log(element);
-  			return element._id != req.body.id;
-			}
+		var count = 0;	
+	
+			if(proxydb != null)
+			{
+				proxydb.Simpleproxy.forEach(function(item){
+					count++;
+				})
+			
+				id = ++count;
 
-			var temp = proxydb.Simpleproxy.filter(removeProxy);
-			proxydb.Simpleproxy = temp
-        	proxydb.save(function(err, data){
+				var targets = req.body.targets;
+				console.log(targets);
+
+				proxydb.Loadbalance.push({configid: "L-"+id  ,targeturl: targets, proxyurl : '', latency: req.body.latency});
+
+				proxydb.save(function(err, data){
 					if(err) 
-						res.send(err);	
-			  		res.send( (err === null) ? { msg: '' } : { msg: err });
+					res.send(err);
+			 	 	res.send( (err === null) ? { msg: '' } : { msg: err });
 				});
+				
+			}
+			else{
+				res.send( (err === null) ? { msg: 'User does not exist' } : { msg: err });
+			}
 		});
 }

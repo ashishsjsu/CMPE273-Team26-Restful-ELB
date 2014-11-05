@@ -12,6 +12,21 @@ a {
 	width: 100%;
 }
 
+#main{
+
+	margin-top: 10%;
+	margin-left: 2%;
+	width: 50%;
+	float: :left;
+}
+
+#showLoads{		
+
+	margin-top: 10%;
+	width: 50%;
+	float: left;
+}
+
 .textBox
 {
 	width : 150px;
@@ -21,7 +36,7 @@ a {
 #addProxy
 {
 	margin-top: 5%;
-	width: 30%;
+	width: 25%;
 	float: left;
 
 }
@@ -29,7 +44,7 @@ a {
 #proxyInfo 
 {
 	margin-top: 5%;
-	width: 30%;
+	width: 25%;
 	float: left;
 }
 	#proxyInfo p 
@@ -43,7 +58,7 @@ a {
 #proxyList {
 
 	margin-top: 5%;
-	width : 30%;
+	width : 40%;
 	float: left;
 }
 	#proxyList table {

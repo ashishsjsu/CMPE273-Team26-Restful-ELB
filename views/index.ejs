@@ -9,6 +9,11 @@
       <h1>Node Http Proxy Server</h1>
       <h3>Simple Proxy Configuration</h3>
       <!-- Wrapper-->
+
+      <input type="text" placeholder="userid" id="txtUser">
+      <br><br>
+      <button id="btnGo">Go</button>
+
       <div id="wrapper">
        
          <!-- ADD PROXY-->
@@ -17,10 +22,10 @@
           <h2>Add Simple Proxy</h2>
             <fieldset>
             <table>
-            <tr>
+           <!-- <tr>
                <td>Proxy URL: </td>
                <td><input id="inputProxyURL" type="text" placeholder="Proxy URL"></td>
-            </tr>
+            </tr> -->
             
             <tr>
                <td>Target URL:</td>
@@ -54,7 +59,12 @@
                   </td>
                   </tr>
                   <tr>
-                     <td>Proxy URL:</td> <td><input id="updateProxyURL" type="text" placeholder="Proxy URL" class="textBox"></td>
+                     <td>Proxy URL:</td> 
+                     <td>
+                     
+                        <label id="updateProxyURL"></label>
+                        <!--<input id="updateProxyURL" type="text" placeholder="Proxy URL" class="textBox"> -->
+                     </td>
                   </tr>
                   <tr>
                      <td>Target URL: </td>
@@ -65,12 +75,12 @@
                      <td><input id="updateProxyLatency" type="text" placeholder="Latency" class="textBox"></td>
                   </tr>
                   </table>
+                  </fieldset>
 
                   <br>
                   <button id="btnUpdateProxy">Update Proxy</button>
                   <button id="btnStartProxy">Start Proxy</button>
                   <button id="btnStopProxy">Stop Proxy</button>
-               </fieldset>
             </div>
          </div>
          <!-- /PROXY INFO-->
@@ -80,9 +90,10 @@
             <table>
                <thead>
                   <tr>
-                     <th>ProxyURL</th>
+                     <th>Configuaration Id</th>
                      <th>TargetURL</th>
                      <th>Latency</th>
+                     <th>ProxyURL</th>
                      <th>Delete?</th>
                   </tr>
                </thead>

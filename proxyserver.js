@@ -14,6 +14,10 @@ var latency;
 var Request;
 var Response;
 var errMsg=null;
+var simpleproxyserver;
+var loadbalancedserver;
+var targetarray;
+
 
 //configure app to use CORS
 app.use(cors());
@@ -60,37 +64,19 @@ router.route('/createproxy')
 
 		targeturl  = req.body.targeturl;
 		latency = req.body.latency;
-		console.log("Parameters received: "+ targeturl + " " + latency);
-		createProxyServer();
-
-		res.json({msg : "Created"});
+		//console.log("Parameters received: "+ targeturl + " " + latency);
+		var portnumber = generatePortNumber();
+		createProxyServer(portnumber);
+		res.json({msg : "Proxyserver running on port " + portnumber, port : portnumber});
 		
 	});
 
 
-router.route('/createproxy/:client_id')
-	
-	/*.get(function(req, res){
-		
-		var proxy = httpProxy.createProxy();
-		res.end("creating proxy server");
+router.route('/createproxy/:config_id')
 
-		ProxyConfig.find({"client": req.params.client_id}, function(err, dbobj){
-			if(err)
-				console.log(err)
-			console.log("Received data...")
-			targeturl = dbobj[0].url;
-			console.log(array);
-			latency = dbobj[0].latency;
-			createProxyServer();
-		})
-
-	})*/
-	
 	
 	.put(function(req, res){
 
-		console.log("PUTTTT "+req.body.url);
 		targeturl = req.body.targeturl;
 		latency = req.body.latency;
 
@@ -98,8 +84,30 @@ router.route('/createproxy/:client_id')
 	})
 
 	.delete(function(req, res){
-		server.close();
+
+		if(simpleproxyserver === undefined)
+		{
+			console.log('Server not running');
+		}
+		else
+		{ 	simpleproxyserver.close();	}
+
 		res.json({msg : "Proxy stopped"});
+	});
+
+
+router.route('/createloadbalancer')
+	
+	.post(function(req, res){
+
+		console.log("in /createloadbalancer");
+		targetarray = req.body.targets;
+		console.log(targetarray);
+
+		var portnumber = generatePortNumber();
+		createLoadBalancer(portnumber);
+		res.json({msg : "Load balanced server running on port " + portnumber});
+
 	});
 
 
@@ -107,13 +115,55 @@ app.listen(8006);
 console.log("Listening on 8006");
 
 
+
+var loadProxy = httpProxy.createProxy();
+
+function createLoadBalancer(portno){
+
+	loadbalancedserver = http.createServer(function(req, res){
+
+		if(req.url === '/favicon.ico')
+		{
+			console.log("favicon disabled");
+			res.end();
+			return;
+		}
+
+
+		loadtargets = {target: targetarray.shift()};
+
+		loadProxy.web(req, res, loadtargets);
+
+		targetarray.push(loadtargets.target);
+
+	});
+
+	loadbalancedserver.listen(portno);
+
+	process.on('uncaughtException', function(err){
+			if(err.errno === 'EADDRINUSE')
+			{
+				console.log("Port already in use");
+			   errMsg = "Port already in use";
+			}
+			else{
+					console.log("Exception happened");
+
+			}
+		});
+	process.on('SIGINT', function() {
+		console.log("Exiting..........");
+  		server.close();
+  	});
+
+}
+
+
 var proxy = httpProxy.createProxy();
 
-var server;
+function createProxyServer(portnumber){
 
-function createProxyServer(){
-
-	server = http.createServer(function (req, res) {
+	simpleproxyserver = http.createServer(function (req, res) {
 
 		if(req.url === '/favicon.ico')
 		{
@@ -133,7 +183,7 @@ function createProxyServer(){
 		{
 			setTimeout(function()
 			{
-				console.log('forwarding request with latency: ', target.target);
+				console.log('forwarding request with latency: ', target.target + "latency: " +latency);
 				proxy.web(req, res, target);
 			}, latency);
 		}
@@ -143,13 +193,34 @@ function createProxyServer(){
 			proxy.web(req, res, target);	
 		}
 
-	}).listen(8005);
+	})
+
+	simpleproxyserver.listen(portnumber);
 
 		process.on('uncaughtException', function(err){
 			if(err.errno === 'EADDRINUSE')
+			{
 				console.log("Port already in use");
 			   errMsg = "Port already in use";
-			});
-}
+			}
+			else{
+					console.log("Exception happened");
 
+			}
+		});
+
+		process.on('SIGINT', function() {
+		console.log("Exiting..........");
+  		server.close();
+  	});
+
+
+}//createProxyServer
+
+
+function generatePortNumber()
+{
+	var proxyport = Math.floor(Math.random() * 16383) + 49152;
+	return proxyport;
+}
 

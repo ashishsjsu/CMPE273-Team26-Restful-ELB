@@ -42,7 +42,8 @@ router.use(function(req, res, next){
 	console.log("Something is happening...");
 	next();
 });
-	
+
+/*	
 router.route('/simpleproxy/:id')
 	//post configuration parameters
 	.post(api.addProxyConfiguration);
@@ -58,18 +59,73 @@ router.route('/simpleproxy/:id')
 	//delete proxy configuration
 	.delete(api.deleteProxyConfiguration);
 
+
+/*
 router.route('/addUser')
 	//post configuration parameters
 	.post(api.addUser)
 
+
 router.route('/getUsers')
 	.get(api.getAllUsers);
+
+*/
+
+
+//new routes
+
+
+router.route('/users')
+	
+	.post(api.addUser)
+
+	.get(api.getAllUsers) //not needed
+/*
+
+router.route('/users/:userid')
+	
+	.get(api.getUser)
+
+	.put(api.updateUser)
+
+	.delete(api.deleteUser)
+*/
+
+
+router.route('/users/:userid/simpleproxy/')
+
+	.post(api.addProxyConfiguration)
+
+	.get(api.getProxyConfiguration);
+
+
+router.route('/users/:userid/simpleproxy/:configid')
+		
+	.put(api.updateProxyConfiguration)
+
+	.delete(api.deleteProxyConfiguration);
 
 
 //Register our routes
 //all our routes will bw prefixed with /api
 app.use('/api', router);
 app.use('/', routes);
+
+//Loadbalcncer APIs
+
+app.get('/loadbalance', function(req, res){
+
+	res.render('loadbalance');
+
+});
+
+
+router.route('/users/:userid/loadbalancer')
+	
+	.post(api.addLoadBalancerConfiguration);
+
+
+
 
 app.listen(port);
 console.log("Node http-proxy api server running on port " + port);
