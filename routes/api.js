@@ -61,12 +61,22 @@ exports.addProxyConfiguration = function(req, res){
 //retrieve all proxy configurations for simpleproxy
 exports.getProxyConfiguration = function(req, res){
 
+		/*retreive configuration from ProxyConfig collection
 		ProxyConfig.findOne({'ClientId' : '1'}, function(err, dbObj){
 			if(err)
 				res.send(err);
 			
 			console.log("in GET");
 			res.json(dbObj);
+		});*/
+
+
+		//retrieve configuration from routing table
+		RoutingInfo.find({}, function(err, docs){
+			if(err)
+				throw err;
+			console.log(docs);
+			res.json(docs);
 		});
 }
 
