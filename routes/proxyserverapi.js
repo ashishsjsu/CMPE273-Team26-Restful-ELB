@@ -4,7 +4,8 @@
 var httpProxy = require('http-proxy'),
  	http = require('http'),
  	https = require('https'),
- 	async = require('async');
+ 	async = require('async'),
+ 	SHA256 = require("crypto-js/sha256");
 
 
 var map = new Object();
@@ -135,6 +136,11 @@ function buildProxyServer(config)
 
 		reverseproxyserver = http.createServer(function (req, res) {
 
+		var start = (new Date()).getMilliseconds();
+
+		//generate unique req id
+		var requestid = SHA256(start.toString() + JSON.stringify(req.headers));
+
 		//disable favicon
 		if(req.url === '/favicon.ico')
 		{
@@ -178,6 +184,25 @@ function buildProxyServer(config)
     	 	//console.log('forwarding request to: ', target.target);
 			proxy.web(req, res, options);	
 		}
+
+			//listen for proxyRes event on proxy
+		proxy.on('proxyRes', function (proxyRes, req, res) {
+
+  			res.setHeader("X-HTTP-Processing-Time", (new Date()).getMilliseconds() - start);
+  			res.setHeader("X-HTTP-request-id", requestid);
+			console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
+  			
+			//res.end("Raw response from target: \n" + JSON.stringify(proxyRes.headers, true, 2) + "\n" + JSON.stringify(res.headers, true, 2));
+		});
+
+		//listen for error event on proxy
+		proxy.on('error', function (err, req, res) {
+  				res.writeHead(500, { 'Content-Type': 'text/plain'
+  			});
+
+  			res.end('Something went wrong. And we are reporting a custom error message.');
+		});
+
 
 	
 	});
