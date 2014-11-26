@@ -6,8 +6,8 @@ var arguments = process.argv.splice(2);
   	 app = express(),
      bodyParser = require('body-parser'),
      proxyapi = require('./routes/proxyserverapi'),
-     loadbalancerapi = require('./routes/loadbalancerapi');
-
+     loadbalancerapi = require('./routes/loadbalancerapi'),
+ 	 gzip = require('./routes/gzip');
 //get mongodb connection instance
 var mongoconn = require("./routes/mongoconnectionbuilder");
 mongoconn.createMongoConnection();
@@ -61,6 +61,9 @@ router.route("/routinginfo/:configid")
 	
 	.put(proxyapi.updateRoutingInfo);
 
+router.route("/gzip")
+
+	.post(gzip.creategzip);
 
 //routes for loadbalacer api here
 router.route("/loadbalancer")
