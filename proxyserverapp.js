@@ -7,6 +7,7 @@ var arguments = process.argv.splice(2);
      bodyParser = require('body-parser'),
      proxyapi = require('./routes/proxyserverapi'),
      loadbalancerapi = require('./routes/loadbalancerapi'),
+     ChangeResponse = require("./routes/ChangeResponse"),
  	 gzip = require('./routes/gzip');
 //get mongodb connection instance
 var mongoconn = require("./routes/mongoconnectionbuilder");
@@ -73,3 +74,8 @@ router.route("/loadbalancer")
 router.route("/loadbalancer/:configid")
 	
 	.delete(loadbalancerapi.stopLoadBalancer);
+
+router.route("/ChangeResponse")
+.post(ChangeResponse.createResponse);
+
+
