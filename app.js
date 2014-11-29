@@ -10,12 +10,15 @@ var express = require('express'),
 	path = require('path');
 	
 var port = process.env.port || 8080; 
-
+var test = require('./routes/test');
 var routes = require('./routes/index');
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.get('/page2', test.getOnPage);
 
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
@@ -73,7 +76,7 @@ router.route('/simpleproxy/:configid')
 //Register our routes
 app.use('/api', router); //all our routes will bw prefixed with /api
 app.use('/', routes);
-
+//app.use('/page2');
 
 app.listen(port);
 console.log("Node http-proxy api server running on port " + port);
