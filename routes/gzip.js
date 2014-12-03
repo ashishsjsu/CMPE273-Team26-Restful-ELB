@@ -15,13 +15,17 @@ exports.creategzip=function(req,res){
 			  
 			);//.listen(port);
 			
-			process.on('uncaughtException', function (err) {
+		process.on('uncaughtException', function (err) {
     	
     	//assign a new port if previous one is already in use and update routing table
     	if(err.errno === "EADDRINUSE")
     	{
     		var port =  generatePortNumber();
     		console.log(port);
+    		//proxy = httpProxy.createProxyServer({
+				//  target: url
+				//});
+    		gzipserver.listen(port);
     		//portnumber = port;
     		//reverseproxyserver.listen(port);
     		//updateRoutingInfowithUrl(config.configid, port);
@@ -35,8 +39,6 @@ exports.creategzip=function(req,res){
 				res.end();
 }
 	
-
-
 function generatePortNumber()
 {
 	var proxyport = Math.floor(Math.random() * 16383) + 49152;
