@@ -19,6 +19,7 @@ var routes = require('./routes/index');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/page2', test.getOnPage);
+app.get('/loadBalancer', test.getLoadBalancerPage);
 
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));

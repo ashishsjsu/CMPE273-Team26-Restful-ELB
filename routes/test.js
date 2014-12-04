@@ -8,3 +8,9 @@ function getOnPage(req, res) {
 }
 
 exports.getOnPage = getOnPage;
+
+function getLoadBalancerPage(req, res) {
+	res.render('LoadBalancer',{});
+}
+
+exports.getLoadBalancerPage = getLoadBalancerPage;
