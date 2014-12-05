@@ -42,7 +42,9 @@ exports.addProxyConfiguration = function(req, res){
 				})
 			}
 
-			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https});
+			console.log(req.body.stringtomatch + " " + req.body.stringtoreplace);
+
+			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
 
 			proxydb.save(function(err, data){
 				if(err) 
@@ -51,7 +53,7 @@ exports.addProxyConfiguration = function(req, res){
 			});				
 
 			//add info to roouting table as well
-			insertSimpleproxyRoutingInfo(count, req.body.targeturl, req.body.latency, req.body.https);
+			insertSimpleproxyRoutingInfo(count, req.body.targeturl, req.body.latency, req.body.https, req.body.stringtomatch, req.body.stringtoreplace);
 			
 		});
 }//addProxyConfiguration
@@ -143,7 +145,7 @@ function deleteSimpleproxyRoutingInfo(configid){
 }
 
 //add configration to routing table on POST
-function insertSimpleproxyRoutingInfo(count, targeturl, latency, https)
+function insertSimpleproxyRoutingInfo(count, targeturl, latency, https, originalres, modifiedres)
 {
 	var routingdb = new RoutingInfo;
 	routingdb.configid = count;
@@ -151,6 +153,9 @@ function insertSimpleproxyRoutingInfo(count, targeturl, latency, https)
 	routingdb.latency = latency;
 	routingdb.https = https;
 	routingdb.status = false;
+	routingdb.originalresponse = originalres;
+	routingdb.modifiedresponse = modifiedres;
+
 
 	routingdb.save(function(err){
 

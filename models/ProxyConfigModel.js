@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var simpleproxy = new Schema({configid: String, targeturl: String, proxyurl: String, latency: String, https:Boolean, status: Boolean});
+var simpleproxy = new Schema({configid: String, targeturl: String, proxyurl: String, latency: String, https:Boolean, status: Boolean, original: String, replacement: String});
 
 var loadbalance = new Schema({configid: String, targeturl: [], proxyurl: String, latency: String})
 

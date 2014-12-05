@@ -18,9 +18,11 @@ var routes = require('./routes/index');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
 app.get('/http', test.getHttpToHttpsPage);
+app.get('/changeresponse', test.getChangeResponsePage)
 
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
@@ -73,6 +75,11 @@ router.route('/simpleproxy/:configid')
 
 	//delete proxy configuration
 	.delete(api.deleteProxyConfiguration);
+
+//routes for change response proxy configuration
+router.route('/simpleproxy/changeresponse')
+	.post(api.addProxyConfiguration)
+
 
 
 //Register our routes

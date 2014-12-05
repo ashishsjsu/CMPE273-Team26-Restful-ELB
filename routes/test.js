@@ -20,3 +20,8 @@ function getHttpToHttpsPage(req, res){
 }
 
 exports.getHttpToHttpsPage = getHttpToHttpsPage;
+
+
+exports.getChangeResponsePage = function(req, res){
+	res.render('ChangeResponse', {});
+}

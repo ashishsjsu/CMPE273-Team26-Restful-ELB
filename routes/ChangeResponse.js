@@ -24,31 +24,9 @@ exports.createResponse=function(req,res1) {
   
 ).listen(8013);
 
-//
-// Basic Http Proxy Server
-//
-var proxy = httpProxy.createProxyServer({
- // target: 'http://localhost:9013'
-	target: url
-	});
+var proxy = httpProxy.createProxyServer({ target: url });
 
-//
-// Target Http Server
-//
-/*http.createServer(function (req, res) {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Hello, I know Ruby\n');
-}).listen(9013);*/
-//res.setHeader('X-HTTP-Processing-Time',RS);
 res1.json({msg:"change running on: " + 8013});
 res1.end();
 }
-
-/*http.createServer(function (req, res) {
-	  res.writeHead(200, { 'Content-Type': 'text/plain' });
-	  res.end('Hello, I know Ruby\n');
-	}).listen(9013);*/
-//util.puts('http proxy server'.blue + ' started '.green.bold + 'on port '.blue + '8013'.yellow);
-//util.puts('http server '.blue + 'started '.green.bold + 'on port '.blue + '9013 '.yellow);
-
 
