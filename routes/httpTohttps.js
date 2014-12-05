@@ -11,7 +11,7 @@ var http = require('http'),
 	connect = require('connect');
 
 
-exports.forwardRequest = function(req, res){
+exports.forwardRequestSecure = function(req, res){
 	var url = req.body.url;
 	res = httpproxy.createProxyServer({
 		target : 'https://www.linkedin.com',
