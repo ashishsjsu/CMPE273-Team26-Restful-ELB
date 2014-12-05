@@ -8,7 +8,9 @@ var arguments = process.argv.splice(2);
      proxyapi = require('./routes/proxyserverapi'),
      loadbalancerapi = require('./routes/loadbalancerapi'),
      ChangeResponse = require("./routes/ChangeResponse"),
- 	 gzip = require('./routes/gzip');
+ 	 gzip = require('./routes/gzip'),
+ 	HTTP = require('./routes/httpTohttps');
+ 
 //get mongodb connection instance
 var mongoconn = require("./routes/mongoconnectionbuilder");
 mongoconn.createMongoConnection();
@@ -79,3 +81,7 @@ router.route("/ChangeResponse")
 .post(ChangeResponse.createResponse);
 
 
+//routes for loadbalacer api here
+router.route("/secure")
+
+	.get(HTTP.forwardRequestSecure);
