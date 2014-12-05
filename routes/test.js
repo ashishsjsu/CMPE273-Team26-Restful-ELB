@@ -14,3 +14,9 @@ function getLoadBalancerPage(req, res) {
 }
 
 exports.getLoadBalancerPage = getLoadBalancerPage;
+
+function getHttpToHttpsPage(req, res){
+	res.render('HttpToHttps',{});
+}
+
+exports.getHttpToHttpsPage = getHttpToHttpsPage;
