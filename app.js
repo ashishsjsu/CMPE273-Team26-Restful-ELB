@@ -81,6 +81,12 @@ router.route('/simpleproxy/changeresponse')
 	.post(api.addProxyConfiguration)
 
 
+//routes for loadbalncer 
+
+router.route('/simpleproxy/loadbalancer')
+	.post(api.addLoadBalancerConfiguration)
+	
+	.get(api.getLoadBalancerConfig);
 
 //Register our routes
 app.use('/api', router); //all our routes will bw prefixed with /api

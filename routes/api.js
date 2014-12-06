@@ -6,6 +6,7 @@ mongoose.connect("mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47
 //require the colletions
 var ProxyConfig = require("../models/ProxyConfigModel");
 var RoutingInfo = require("../models/RoutingInfo");
+var LoadBalInfo = require("../models/LoadBalModel");
 
 
 //add default client 
@@ -181,9 +182,9 @@ function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https){
 	});
 }
 
-
-/*
 exports.addLoadBalancerConfiguration = function(req, res){
+
+	console.log("Loadbalance config: " + req.body.config);
 
 	ProxyConfig.findOne({"ClientId": "1"}, function(err, proxydb){
 			if(err)
@@ -197,17 +198,50 @@ exports.addLoadBalancerConfiguration = function(req, res){
 					count++;
 				})
 			}	
-	
-				var targets = req.body.targets;
+			
+			var targets = req.body.config;
+				
 				console.log(targets);
 
-				proxydb.Loadbalance.push({configid: "L-"+id  ,targeturl: targets, proxyurl : '', latency: req.body.latency});
+				proxydb.Loadbalance.push({configid: "L-"+count, targeturl: targets, proxyurl : ''});
 
 				proxydb.save(function(err, data){
 					if(err) 
-					res.send(err);
-			 	 	res.send( (err === null) ? { msg: '' } : { msg: err });
+						res.send(err);
+			  		res.send( (err === null) ? { msg: '' } : { msg: err });
 				});
+
+					insertLoadBalRoutingInfo("L-"+count, targets);
+		});
+
+}
+
+
+//insert load balncer configurations into routing table
+function insertLoadBalRoutingInfo(configid, targetinstances)
+{
+	var loadbalroutingdb = new LoadBalInfo;
+	loadbalroutingdb.configid =  configid;
+	loadbalroutingdb.targeturl = targetinstances;
+	loadbalroutingdb.proxyurl = "";
+	loadbalroutingdb.status = false;
+
+	loadbalroutingdb.save(function(err){
+		if(err)
+			throw err;
+		console.log("Load Balancer config added " + loadbalroutingdb);
+	});
+
+}
+
+
+exports.getLoadBalancerConfig = function(req, res){
+	
+		//retrieve configuration from routing table
+		LoadBalInfo.find({}, function(err, docs){
+			if(err)
+				throw err;
+			console.log(docs);
+			res.json(docs);
 		});
 }
-*/

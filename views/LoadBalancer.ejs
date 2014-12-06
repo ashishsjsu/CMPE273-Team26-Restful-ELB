@@ -19,32 +19,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
     <link href="/stylesheets/styles.css" rel="stylesheet">
     <script src="/javascripts/modernizr-2.6.2.min.js"></script>
     
-    <script>
-    $(document).ready(function(){
-  $("#AddConfig").click(function () {
-     $("#mytable").each(function () {
-         var tds = '<tr>';
-         jQuery.each($('tr:last', this), function () {
-             tds += this.innerHTML;
-         });
-         tds += '</tr>';
-         if ($('tbody', this).length > 0) {
-             $('tbody', this).append(tds);
-         } else {
-             $(this).append(tds);
-         }
-     });
-});
-	$("#RemoveConfig").click(function () {
-     $("#mytable").each(function () {
-		jQuery.each($('tr:last', this), function () {
-             this.remove();
-         });
-	 });
-	});
-
-});
-    </script>
+    <script src="/javascripts/loadbalscript.js"></script>
 </head>
 
 <body>
@@ -103,41 +78,71 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
     
                     <div class="container">
                         <!-- Load Balancer LIST-->
-
-                        <div id="proxyList">
+                        <section>
+                        <div class = "row">
+                        <div id="AddLoadBalancer">
                             <h2>Load Balancer</h2>
 
-                            <table border="1" class="table table border" id="mytable">
+                            <table border="1" class="table table border" id="lbconfigtable">
                                 <thead>
                                     <tr>
-                                        <th>Column A</th>
+                                        <th width="50%">Instance URL</th>
 
-                                        <th>Column B</th>
-
-                                        <th>Column C</th>
-
-                                        <th>Column D</th>
-
+                                        <th width="50%">Instance Port</th>
                                      </tr>
                                 </thead>
-                                <tr>
-                            	<td>A</td>
-                            	<td>B</td>
-                            	<td>C</td>
-                            	<td>D</td>
-                            	</tr>
-                            
+                                <tbody>
+                             
+                              </tbody>
                             </table>
                             <div>
-                            <button class="btn btn-primary" id="AddConfig" type="button">Add Load Balancer</button>
-                            <button class="btn btn-primary" id="RemoveConfig" type="button">Remove Load Balancer</button>
+                            <button class="btn btn-primary" id="btnAddConfig" type="button">Add</button>
+                            <button class="btn btn-primary" id="btnRemoveConfig" type="button">Remove</button>
                             </div>
-                            </div><!-- /Load Balancer list-->
+                         </div><!-- /Load Balancer list-->
+                           <div class="modal-footer">
+                            <button class="btn btn-primary" id="btnSavelbConfig" type="button">SAVE</button>
+                        </div><!-- end of model footer -->
                     </div>
                 </section>
             </div><!--row ended -->
             <!-- container ended -->
-            
+
+              <!-- LIST -->
+
+         <div class="container" id="loadbalancelist">
+                <section>
+                    <h4 style="text-align: center"><strong>Proxy
+                    Details</strong></h4>
+
+                    <div class="row">
+                        <!-- PROXY LIST-->
+
+                        <div id="loadbalancelist">
+                            <h2>Loadbalance List</h2>
+
+                            <table border="1" class="table table border">
+                                <thead>
+                                    <tr>
+                                        <th width="20%">Configuaration Id</th>
+
+                                        <th width="20%">Instances</th>
+
+                                        <th width="20%">ProxyURL</th>
+
+                                        <th width="20%">Status</th>
+
+                                        <th width="20%">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+                            </table>
+                        </div><!-- /PROXY LIST-->
+                    </div>
+                </section>
+            </div><!--row ended -->
+
 
     <div class="container">
         <div class="line" id="line">
