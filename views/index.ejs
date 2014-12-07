@@ -21,15 +21,17 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 </head>
 
 <body>
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#"> PROXY LIST : </a>
-     <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
+<div class = "cointainer">
+	<nav class="navbar navbar-default" role="navigation">
+ 		 <div class="container-fluid">
+ 			   <div class="navbar-header">
+      <a class="navbar-brand" href="#">     </a>
+      <p style=" text-indent: 16em;">
+      <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
    
     <a href="/page2"> <button type="button" class="btn btn-default navbar-btn">   GZIP </button> </a>
     
-    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
+   <!-- <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a> -->
     
     <a href="/changeresponse"> <button type="button" class="btn btn-default navbar-btn"> Change-Response Proxy</button> </a>
     
@@ -38,10 +40,11 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
     <a href="/loadBalancer"> <button type="button" class="btn btn-default navbar-btn"> Load Balancer</button> </a>
         
     <a href="/http"> <button type="button" class="btn btn-default navbar-btn"> HTTP-Secure</button> </a>
+   </p>
     </div>
   </div>
  </nav>
-  
+ </div> 
     <div class="row">
         <div class="container" id="main">
             <div class="carousel slide" id="myCarousel">
@@ -128,10 +131,12 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                     </div>
                 </section>
             </div><!--row ended -->
-            <!-- container ended -->
+           </div> <!-- cointainer end-->
+           </div>
             <!-- **********************proxy details module******************************** -->
-
+          <div class = cointainer>
             <div class="col" id="main2">
+            
                 <div class="model-fade">
                     <div class="model-dialog">
                         <div class="modal-header">
@@ -156,58 +161,32 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         <td><input id="inputLatency"
                                         placeholder="Latency" type="text"></td>
                                     </tr>
+                                    
+                                     <br>
+                                     </br>
+                                     
 
                                 </table><br>
                             </fieldset>
-                        </div>
+                        
 
-                        <div class="modal-footer">
+                        <div class="modal-footer" id ="foot1">
                             <button class="btn btn-primary" id="btnAddProxy"
                             type="button">SAVE PROXY</button>
                         </div><!-- end of model footer -->
                     </div><!-- model dialog ends -->
                 </div><!-- model fade ends -->
             </div><!-- ending column 2 cointainer -->
-
-            <div class="col" id="main5"></div><!-- endding container-->
-        </div><!-- ending row -->
-        <!--    **********************************Update  proxy module ***************************************************--><!--   sample code 
-<div class = "container" id="main6">
-     <section> 
-       this is section
-          <div class = "row">
-             <div class = "col-xx-1" >
-             this is half row xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-             </div> <!== span 6.1 ends here -->
-        <!--            
-             <div class= "col-md-4"> 
-             this is half row 
-             </div> <!== span 6.2 ends here -->
-        <!--           </div> <!== row ends here -->
-        <!--</section>
-<!==</div> <!== main6 container ends here -->
-        <!-- sample code ends here -->
-
-        <div class="container">
-            <div class="line" id="line">
-                <p>
-                _____________________________________________________________________________________________________________________________________________________</p>
-            </div><!-- line class ends here -->
-        </div><!-- class container ends here -->
-
-        <div class="container">
-            <div class="col" id="col3">
-                <div class="modal-footer"></div>
-            </div><!-- column 1 of container ends here -->
-
-            <div class="col" id="col4">
-                <div class="model-fade">
-                    <div class="model-dialog">
-                        <h4 class="modal-title"><strong>UPDATE
-                        PROXY</strong></h4>
-                    </div><!-- ending of model header-->
-
-                    <div id="proxyInfo">
+            </div>
+           
+            
+        <!--    **********************************Update  proxy module ***************************************************-->  
+           <div class = "cointainer" id = "cont2">
+               <div class="modal-header">
+                            <h4 class="modal-title"><strong>Update Proxy
+                            PROXY</strong></h4>
+                        </div><!-- ending of model header-->
+                 <div id="proxyInfo">
                         <div id="updateProxy">
                             <fieldset>
                                 <table>
@@ -241,9 +220,9 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                     </tr>
                                 </table>
                             </fieldset>
-                        </div>
-                    </div>
-
+                       
+                            <br>
+                            </br>
                     <div class="modal-footer">
                         <button class="btn btn-warning" id="btnUpdateProxy"
                         type="button">UPDATE PROXY</button> <button class=
@@ -251,18 +230,15 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                         "button">START PROXY</button> <button class=
                         "btn btn-primary" id="btnStopProxy" type="button">STOP
                         PROXY</button>
+                 </div>
+              </div>        
                     </div><!-- end of model footer -->
                 </div><!-- model dialog ends -->
             </div><!-- model fade -->
         </div><!-- col4 ends here-->
     </div><!-- row ends here  --><!-- container ends here -->
-
-    <div class="container">
-        <div class="line" id="line">
-            <p>
-            _____________________________________________________________________________________________________________________________________________________</p>
-        </div><!-- line class ends here -->
-    </div><!-- class container ends here -->
+</div>
+</div><!-- class container ends here -->
     <!--First try for the online version of jQuery-->
     <script src="http://code.jquery.com/jquery.js"></script> 
 <!-- If no online access, fallback to our hardcoded version of jQuery -->
@@ -272,4 +248,3 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="/javascripts/global.js"></script>
 </body>
-</html>
