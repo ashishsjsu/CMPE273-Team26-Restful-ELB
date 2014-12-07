@@ -1,20 +1,16 @@
 {
-"name"          : "Restful ELB",
+"name"          : "node-http-proxy-api",
 "version"       : "0.1.0",
 "main"          : "app.js",
-"author"        : "CMPE273-Team26 Restful ELB",
+"author"        :"Ashish Narkhede ashish12021@gmail.com",
 "scripts"       : {"start" : "node app.js"},
-"description"   : "A REST api to configure node http-proxy server",
+"description"   : "An api to configure node-http-proxy",
 "dependencies"  : {
                     "express" : "~4.10.1",
                     "mongoose" : "~3.8.18",
                     "body-parser" : "~1.9.2",
                     "http-proxy" : "~1.6.0",
-                    "crypto" : "~0.0.3",
-                    "connect": "~2.11.0",
-                    "request": "~2.27.0",
-                    "connect-restreamer": "~1.0.0",
-                    "crypto-js": "1.4.25"
+                    "crypto" : "~0.0.3"
                   },
 "license"       : "@CMPE273-Team26"
 }

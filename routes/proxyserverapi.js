@@ -75,8 +75,14 @@ function updateRoutingInfowithUrl(configid, proxyport)
 exports.stopReverseProxyServer = function(req, res){
 
 	var server = map[req.params.configid];
-	server.close();
-	res.json({msg : "stopped"});
+	if(server === undefined) {
+		console.log("Server not running");
+	} else {
+		server.close();	
+		delete map[req.params.configid];
+	}
+	
+	res.json({msg : "Proxy Stopped"});
 
 	RoutingInfo.update({'configid' : req.params.configid}, { $set : {'status' : false, 'proxyurl' : null} }, function(err, data){
 		if(err)

@@ -43,6 +43,8 @@ exports.addProxyConfiguration = function(req, res){
 				})
 			}
 
+			count++;
+
 			console.log(req.body.stringtomatch + " " + req.body.stringtoreplace);
 
 			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
@@ -50,11 +52,13 @@ exports.addProxyConfiguration = function(req, res){
 			proxydb.save(function(err, data){
 				if(err) 
 					res.send(err);
+
+				//add info to roouting table as well
+				insertSimpleproxyRoutingInfo(count, req.body.targeturl, req.body.latency, req.body.https, req.body.stringtomatch, req.body.stringtoreplace);
+			
 			  	res.send( (err === null) ? { msg: '' } : { msg: err });
 			});				
 
-			//add info to roouting table as well
-			insertSimpleproxyRoutingInfo(count, req.body.targeturl, req.body.latency, req.body.https, req.body.stringtomatch, req.body.stringtoreplace);
 			
 		});
 }//addProxyConfiguration
@@ -63,16 +67,6 @@ exports.addProxyConfiguration = function(req, res){
 //Simpleproxy GET
 //retrieve all proxy configurations for simpleproxy
 exports.getProxyConfiguration = function(req, res){
-
-		/*retreive configuration from ProxyConfig collection
-		ProxyConfig.findOne({'ClientId' : '1'}, function(err, dbObj){
-			if(err)
-				res.send(err);
-			
-			console.log("in GET");
-			res.json(dbObj);
-		});*/
-
 
 		//retrieve configuration from routing table
 		RoutingInfo.find({}, function(err, docs){
