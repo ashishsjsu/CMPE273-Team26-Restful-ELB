@@ -24,6 +24,9 @@ $(document).ready(function() {
     //start proxy server button click
     $('#btnStartProxy').on('click', startProxyServer);
 
+    //start proxy server button click
+    $('#btnRefresh').on('click', populateTable);
+
     //stop proxy server 
     $('#btnStopProxy').on('click', stopProxyServer);
 
@@ -106,7 +109,6 @@ function showProxyInfo(event) {
     $('#updateProxy fieldset input#updateProxyLatency').val(thisProxyObject.latency);
     
 };
-
 
 function addProxy(event) {
     event.preventDefault();
