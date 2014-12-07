@@ -82,11 +82,22 @@ router.route('/simpleproxy/changeresponse')
 
 
 //routes for loadbalncer 
-
 router.route('/simpleproxy/loadbalancer')
 	.post(api.addLoadBalancerConfiguration)
 	
 	.get(api.getLoadBalancerConfig);
+
+router.route('/simpleproxy/loadbalancer/:configid')
+
+	//.put(api.updateLoadBalancerConfiguration)
+
+	.delete(api.deleteLoadBalancerConfiguration);
+
+router.route('/simpleproxy/loadbalancer/:configid/instance')
+	
+	.delete(api.removeInstanceFromLoadBalancer)
+
+	.put(api.addInstanceinLoadBalancer);
 
 //Register our routes
 app.use('/api', router); //all our routes will bw prefixed with /api

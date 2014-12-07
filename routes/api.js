@@ -20,7 +20,6 @@ exports.addDefaultClient = function(req, res){
 			res.send(err);
 
 		res.json({ message : "Default client added"});	
-		console.log(proxydb);
 
 	})
 }
@@ -44,8 +43,6 @@ exports.addProxyConfiguration = function(req, res){
 			}
 
 			count++;
-
-			console.log(req.body.stringtomatch + " " + req.body.stringtoreplace);
 
 			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
 
@@ -72,7 +69,6 @@ exports.getProxyConfiguration = function(req, res){
 		RoutingInfo.find({}, function(err, docs){
 			if(err)
 				throw err;
-			console.log(docs);
 			res.json(docs);
 		});
 }
@@ -84,15 +80,11 @@ exports.updateProxyConfiguration = function(req, res){
 
 	var query = {"ClientId" : "1"};
 
-	console.log("configid " + req.params.configid);
-
 	var update = { $pull : { Simpleproxy : {configid: req.params.configid}}};
 
 	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
 
 	var proxyurl = req.body.proxyurl;
-
-	console.log("targeturl : " +req.body.targeturl);
 
 	var query = {"ClientId" : "1"};
 
@@ -178,8 +170,6 @@ function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https){
 
 exports.addLoadBalancerConfiguration = function(req, res){
 
-	console.log("Loadbalance config: " + req.body.config);
-
 	ProxyConfig.findOne({"ClientId": "1"}, function(err, proxydb){
 			if(err)
 				res.send(err);
@@ -195,8 +185,6 @@ exports.addLoadBalancerConfiguration = function(req, res){
 			
 			var targets = req.body.config;
 				
-				console.log(targets);
-
 				proxydb.Loadbalance.push({configid: "L-"+count, targeturl: targets, proxyurl : ''});
 
 				proxydb.save(function(err, data){
@@ -235,7 +223,87 @@ exports.getLoadBalancerConfig = function(req, res){
 		LoadBalInfo.find({}, function(err, docs){
 			if(err)
 				throw err;
-			console.log(docs);
 			res.json(docs);
 		});
+}
+
+
+exports.deleteLoadBalancerConfiguration = function(req, res){
+
+	var query = {"ClientId" : "1"};
+	
+	var update = { $pull : { Loadbalance : {configid: req.params.configid}}};
+
+	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+			res.send( (err === null) ? { msg: '' } : { msg: err });
+	})
+
+	deleteLoadBalanceRoutingInfo(req.params.configid);
+}
+
+//also remove configuration from routing table
+function deleteLoadBalanceRoutingInfo(configid){
+
+	LoadBalInfo.remove({'configid' : configid}, function(err, data){
+		if(err)
+			throw err;
+
+		console.log((err === null) ? { msg: 'Deleted' + data } : { msg: err });	
+	})
+}
+
+exports.removeInstanceFromLoadBalancer = function(req, res){
+
+	var query = {"ClientId" : "1", "Loadbalance.configid" :  req.params.configid };
+
+	var update = { $pull : { "Loadbalance.$.targeturl" : req.body.instanceurl } };
+
+	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+			removeInstancefromLBRouting(req.params.configid, req.body.instanceurl);
+			res.send( (err === null) ? { msg: '' } : { msg: err });
+	});
+
+	
+}
+
+function removeInstancefromLBRouting(configid, instanceurl)
+{
+	//also remove it from routing table
+	var query = { "configid" : configid };
+
+	var update = { $pull : { "targeturl" : instanceurl } };
+
+	LoadBalInfo.findOneAndUpdate(query, update, function(err, data){
+
+
+	});
+
+}
+
+exports.addInstanceinLoadBalancer = function(req, res){
+
+ 	var query = {"ClientId" : "1", "Loadbalance.configid" :  req.params.configid };
+
+	var update = { $push : { "Loadbalance.$.targeturl" : req.body.instanceurl } };
+
+	ProxyConfig.findOneAndUpdate(query, update, function(err, data){
+
+			addInstanceinLoadBalancer( req.params.configid, req.body.instanceurl);
+			res.send( (err === null) ? { msg: '' } : { msg: err });
+	});
+}
+
+
+function addInstanceinLoadBalancer(configid, instanceurl){
+	//also add it from routing table
+	var query = { "configid" : configid };
+
+	var update = { $push : { "targeturl" : instanceurl } };
+
+	LoadBalInfo.findOneAndUpdate(query, update, function(err, data){
+
+			
+	});
 }

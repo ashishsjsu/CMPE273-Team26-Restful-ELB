@@ -64,8 +64,18 @@ function updateLoadBalRouting(configid, proxyport){
 exports.stopLoadBalancer = function(req, res){
 
 	var server = loadMap[req.params.configid];
-	server.close();
-	res.json({msg : "Stopped"});
+
+	if(server === undefined)
+	{
+		res.json({msg : "Loadbalancer not running"});
+
+	}
+	else
+	{
+		server.close();
+		res.json({msg : "Loadbalancer stopped"});
+
+	}
 
 	LoadbalanceConfig.update({'configid' : req.params.configid}, { $set : { 'status' : false, 'proxyurl': null } }, function(err, data){
 		if(err)
@@ -74,6 +84,21 @@ exports.stopLoadBalancer = function(req, res){
 	});
 }
 
+
+exports.removeFromloadBalancer = function(req, res){
+	
+	console.log("Config id " + req.params.configid + " Instance to remove " + req.body.instanceurl);
+
+	var query = { "configid" : req.params.configid };
+
+	var update = { $pull : { "targeturl" : req.body.instanceurl } };
+
+	LoadbalanceConfig.findOneAndUpdate(query, update, function(err, data){
+
+		res.send( (err === null) ? { msg: '' } : { msg: err });
+
+	});
+}
 
 /*========================== Create load balancer ===================================*/
 
@@ -125,7 +150,6 @@ function buildLoadBalancer(loadconfig){
 	//poll routing table for new configurations
 	setInterval(function(){
    		
-   			console.log("Polling the db ");
    			LoadbalanceConfig.findOne({configid : loadconfig.configid}, function(err, loadbaldb){
    				if(err)
 					res.send(err)

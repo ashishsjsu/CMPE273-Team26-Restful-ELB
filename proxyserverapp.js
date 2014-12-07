@@ -77,6 +77,10 @@ router.route("/loadbalancer/:configid")
 	
 	.delete(loadbalancerapi.stopLoadBalancer);
 
+//route to remove an instance from load balancer
+router.route('/loadbalancer/:configid/appinstance')
+	.delete(loadbalancerapi.removeFromloadBalancer);
+
 router.route("/ChangeResponse")
 .post(ChangeResponse.createResponse);
 

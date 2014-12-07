@@ -10,7 +10,18 @@ $(document).ready(function(){
 
 		$('#btnSavelbConfig').on('click', SaveLBConfiguration);
 
-		appendRows();
+        // proxuy URL link click
+        $('#loadbalancelist table tbody').on('click', 'td a.linkdeleteproxy', removeFromLoadBalancer);
+
+        $('#loadbalancelist table tbody').on('click', 'td a.linkupdateconfig', addInstancetoBalancer);    
+
+        $('#loadbalancelist table tbody').on('click', 'td a.linkStartBalancer', startLoadBalancer);
+
+        $('#loadbalancelist table tbody').on('click', 'td a.linkStopBalancer', stopLoadBalancer);    
+        
+        $('#loadbalancelist table tbody').on('click', 'td a.linkDeleteLbConfig', deleteLoadBalancerConfig);
+
+	//	appendRows();
 });
 
 
@@ -27,14 +38,14 @@ function populateTable() {
        //proxyListData = data.Simpleproxy;
        loadbalancerdata = data;
 
-       alert(data);
 
         // For each item in our JSON, add a table row and cells to the content string
         $.each(loadbalancerdata, function(){
 
-        	alert();
-
             tableContent += '<tr>';
+            tableContent += '<td><a href="#" class="linkStartBalancer" rel="' + this.configid + '" title="Start">Start   </a>';
+            tableContent += '<a href="#" class="linkStopBalancer" rel="' + this.configid + '" title="Stop">   Stop</a>';
+            tableContent += '<a href="#" class="linkDeleteLbConfig" rel="' + this.configid + '" title="Delete">    Delete</a></td>';  
             tableContent += '<td><a href="#" class="linkshowproxy" rel="' + this.configid + '" title="Show Details">' + this.configid + '</a></td>';
            // tableContent += '<td>' + this.port + '</td>';
             tableContent += '<td>' + this.targeturl + '</td>';
@@ -49,7 +60,8 @@ function populateTable() {
                 tableContent += '<td>' + "Stopped" + '</td>';
             }
          
-            tableContent += '<td><a href="#" class="linkdeleteproxy" rel="' + this.configid + '">Remove from loadbalancer</a></td>';
+            tableContent += '<td><a href="#" class="linkdeleteproxy" rel="' + this.configid + '">Remove Instance</a>\
+            <a href="#" class="linkupdateconfig" rel="' + this.configid + '">Add Instance</a></td>';
             tableContent += '</tr>';
         });
 
@@ -59,7 +71,135 @@ function populateTable() {
 };
 
 
-function SaveLBConfiguration()
+
+function startLoadBalancer(event){
+
+    event.preventDefault();
+
+
+    $.ajax({
+
+        type : "POST",
+        data : { 'configid' : $(this).attr('rel') },
+        url  : 'http://localhost:8006/proxyserver/loadbalancer',
+        dataType : 'JSON'
+
+    }).done(function(response){
+
+         
+        alert(response.msg);
+
+        populateTable();
+
+            
+    });
+
+    alert("in startLoadBalancer " + $(this).attr('rel'));
+}
+
+
+function stopLoadBalancer(event)
+{
+    event.preventDefault();
+
+    alert("in stopLoadBalancer");
+
+    $.ajax({
+
+        type : "DELETE",
+        url  : 'http://localhost:8006/proxyserver/loadbalancer/' + $(this).attr('rel'),
+        dataType : 'JSON'
+
+    }).done(function(response){
+
+        alert(response.msg);
+
+        populateTable();
+
+    });
+}
+
+
+function deleteLoadBalancerConfig(event)
+{
+   event.preventDefault();
+
+    //stop load balancer first
+    $.ajax({
+
+        type : "DELETE",
+        url  : 'http://localhost:8006/proxyserver/loadbalancer/' + $(this).attr('rel'),
+        dataType : 'JSON'
+
+    }).done(function(response){
+
+        alert(response.msg);
+
+        populateTable();
+
+    });
+
+    //delete configuration then
+    $.ajax({
+
+        type : "DELETE",
+        url  : 'http://localhost:8080/api/simpleproxy/loadbalancer/' + $(this).attr('rel'),
+        dataType : 'JSON'
+
+    }).done(function(response){
+
+        populateTable();
+            
+    });
+
+}
+
+function removeFromLoadBalancer(event)
+{
+    event.preventDefault();
+
+    var configid = $(this).attr('rel');
+
+    var retval = prompt("Enter instance url to remove : ", "instance url here");
+
+    alert("You entered: " + retval);
+
+   $.ajax({
+
+            type: "Delete",
+            data: { 'instanceurl' : retval },
+            url: '/api/simpleproxy/loadbalancer/'+configid+'/instance',
+            dataType : JSON
+
+    }).done(function(response){
+
+        populateTable();
+    });
+}
+
+function addInstancetoBalancer(event)
+{
+    event.preventDefault();
+
+    var configid = $(this).attr('rel');
+    var retval = prompt("Enter instance url : ", "instance url here");
+
+     $.ajax({
+
+            type: "Put",
+            data: { 'instanceurl' : retval },
+            url: '/api/simpleproxy/loadbalancer/'+configid+'/instance',
+            dataType : JSON
+
+    }).done(function(response){
+
+        populateTable();
+    });
+
+}
+
+
+function SaveLBConfiguration(event)
 {
 	event.preventDefault();
 
@@ -88,7 +228,7 @@ function SaveLBConfiguration()
 
     	if(Boolean(flag)){
 
-    		alert("AJAX");
+    	
  		  //ajax call to save data in db
 		  $.ajax({
     				type : 'POST',
@@ -96,26 +236,29 @@ function SaveLBConfiguration()
     				dataType : JSON,
     				url : '/api/simpleproxy/loadbalancer'
 
-    			}).done(function(response){ });
+    			}).done(function(response){
+
+                        populateTable();
+                 });
 
 		    $("#lbconfigtable tbody tr").remove();
 	   
  			appendRows();
+                    
  		}
-
 
     console.log({'config' : Config});
 
 }
 
-function removeLastRow()
+function removeLastRow(event)
 {
 	event.preventDefault();
 
 			$("#lbconfigtable tbody tr:last-child").remove();
 }
 
-function appendRows()
+function appendRows(event)
 {	
 	event.preventDefault();
 

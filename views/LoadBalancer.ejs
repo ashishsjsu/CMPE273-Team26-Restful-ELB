@@ -26,7 +26,21 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-       </div>
+      <a class="navbar-brand" href="#"> PROXY LIST : </a>
+     <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
+   
+    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn">   GZIP </button> </a>
+    
+    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
+    
+    <a href="/changeresponse"> <button type="button" class="btn btn-default navbar-btn"> Change-Response Proxy</button> </a>
+    
+    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Web-Socket Proxy</button> </a>
+    
+    <a href="/loadBalancer"> <button type="button" class="btn btn-default navbar-btn"> Load Balancer</button> </a>
+        
+    <a href="/http"> <button type="button" class="btn btn-default navbar-btn"> HTTP-Secure</button> </a>
+    </div>
   </div>
  </nav>
   <div class="container" id="main">
@@ -112,8 +126,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 
          <div class="container" id="loadbalancelist">
                 <section>
-                    <h4 style="text-align: center"><strong>Proxy
-                    Details</strong></h4>
+                    <h4 style="text-align: center"><strong>Load Balancers</strong></h4>
 
                     <div class="row">
                         <!-- PROXY LIST-->
@@ -124,13 +137,15 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                             <table border="1" class="table table border">
                                 <thead>
                                     <tr>
-                                        <th width="20%">Configuaration Id</th>
+                                        <th width="20%">Action</th>
 
-                                        <th width="20%">Instances</th>
+                                        <th width="5%">Configuaration Id</th>
 
-                                        <th width="20%">ProxyURL</th>
+                                        <th width="25%">Instances</th>
 
-                                        <th width="20%">Status</th>
+                                        <th width="25%">ProxyURL</th>
+
+                                        <th width="5%">Status</th>
 
                                         <th width="20%">Action</th>
                                     </tr>
