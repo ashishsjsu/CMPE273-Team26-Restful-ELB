@@ -10,7 +10,8 @@ var arguments = process.argv.splice(2);
      loadbalancerapi = require('./routes/loadbalancerapi'),
      ChangeResponse = require("./routes/ChangeResponse"),
  	 gzip = require('./routes/gzip'),
- 	HTTP = require('./routes/httpTohttps');
+ 	HTTP = require('./routes/httpTohttps'),
+ 	websockproxy = require('./routes/Websocketproxyapi');
  
 //get mongodb connection instance
 var mongoconn = require("./routes/mongoconnectionbuilder");
@@ -100,3 +101,7 @@ router.route("/ChangeResponse")
 router.route("/secure")
 
 	.get(HTTP.forwardRequestSecure);
+
+router.route('/websocketproxy')
+	
+	.post(websockproxy.createWebSocketProxy);

@@ -24,7 +24,8 @@ app.get('/simpleProxy', test.getSimpleProxyPage);
 app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
 app.get('/http', test.getHttpToHttpsPage);
-app.get('/changeresponse', test.getChangeResponsePage)
+app.get('/changeresponse', test.getChangeResponsePage);
+app.get('/websocketproxy', test.getWebsocketproxypage);
 
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));

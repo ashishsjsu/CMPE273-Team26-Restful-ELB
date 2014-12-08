@@ -31,3 +31,8 @@ exports.getHttpToHttpsPage = getHttpToHttpsPage;
 exports.getChangeResponsePage = function(req, res){
 	res.render('ChangeResponse', {});
 }
+
+exports.getWebsocketproxypage = function(req, res){
+
+	res.render('Websocketproxy', {});
+}
