@@ -25,14 +25,13 @@ app.get('/simpleProxy', test.getSimpleProxyPage);
 app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
 app.get('/http', test.getHttpToHttpsPage);
-<<<<<<< HEAD
-app.get('/changeresponse', test.getChangeResponsePage)
+//app.get('/changeresponse', test.getChangeResponsePage)
 app.get('/gzip', test.getGzip);
-=======
+
 app.get('/changeresponse', test.getChangeResponsePage);
 app.get('/websocketproxy', test.getWebsocketproxypage);
 
->>>>>>> branch 'master' of https://github.com/ashishsjsu/CMPE273-Team26-Restful-ELB.git
+
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());

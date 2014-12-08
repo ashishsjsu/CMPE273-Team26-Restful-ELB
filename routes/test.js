@@ -32,12 +32,13 @@ exports.getChangeResponsePage = function(req, res){
 	res.render('ChangeResponse', {});
 }
 
-<<<<<<< HEAD
+
 exports.getGzip = function(req,res){
 	res.render('gzip',{});
-=======
+}
+
 exports.getWebsocketproxypage = function(req, res){
 
 	res.render('Websocketproxy', {});
->>>>>>> branch 'master' of https://github.com/ashishsjsu/CMPE273-Team26-Restful-ELB.git
+
 }
