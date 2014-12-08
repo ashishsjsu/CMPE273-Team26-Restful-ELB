@@ -66,7 +66,7 @@ router.route("/routinginfo/:configid")
 
 router.route("/gzip")
 
-	.post(gzip.creategzip);
+	.post(gzip.insertInDb);
 
 //routes for loadbalacer api here
 router.route("/loadbalancer")

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title> GZIP </title>
+</head>
+<body>
+<h1 style="font-size:300%;text-align:center">GZIP MODULE</h1>
+<div class="col" id="gzip">
+                <div class="model-fade">
+                    <div class="model-dialog">
+                        <div class="modal-header">
+                            <h4 class="modal-title"><strong>ADD THE URL TO BE GZIPPED</strong></h4>
+                        </div><!-- ending of model header-->
+
+                        <div id="addProxy">
+                            
+                                <table>
+                                    <tr>
+                                        <td>Target URL:</td>
+
+                                        <td><input id="inputProxyTargetURL"
+                                        placeholder="Target URL" type=
+                                        "text"></td>
+                                    </tr>
+                                </table><br>                            
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="btnAddProxy"
+                            type="button">GZIP URL!!</button>
+                        </div><!-- end of model footer -->
+                    </div><!-- model dialog ends -->
+                </div><!-- model fade ends -->
+            </div><!-- ending column 2 cointainer -->
+
+            <div class="col" id="main5"></div><!-- endding container-->
+        </div><!-- ending row -->
+        
+        <!-- /GZIP LIST-->
+
+            <div class="container" id="gziplist">
+                <section>
+
+                    <div class="row">
+                        <!-- PROXY LIST-->
+
+                        <div id="gziplist">
+                            <h3>Gzipped URL List</h3>
+
+                            <table border="1" class="table table border">
+                                <thead>
+                                    <tr>
+                                        <th>URL Id</th>
+
+                                        <th>TargetURL</th>
+
+                                        <th>GzipURL</th>
+
+                                        <th>Status</th>
+
+                                        <th>Delete?</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+                            </table>
+                        </div><!-- /PROXY LIST-->
+                    </div>
+                </section>
+            </div><!--row ended -->
+</body>
+</html>

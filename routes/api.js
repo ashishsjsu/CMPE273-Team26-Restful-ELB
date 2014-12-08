@@ -33,16 +33,18 @@ exports.addProxyConfiguration = function(req, res){
 			if(err)
 				res.send(err);
 
-			var count = 0;		
+			var count1 = " ";		
 			
 			if(proxydb.Simpleproxy != undefined)
 			{
 				proxydb.Simpleproxy.forEach(function(item){
-					count++;
+				count1=item.configid;
+				console.log("string count" + count1)
 				})
 			}
-
+			count=parseInt(count1);
 			count++;
+			console.log("count" + count)
 
 			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
 
@@ -144,13 +146,13 @@ function insertSimpleproxyRoutingInfo(count, targeturl, latency, https, original
 	routingdb.modifiedresponse = modifiedres;
 
 
-	routingdb.save(function(err){
-
-		if(err)
-			throw err;
-
-		console.log("routing info added : " + routingdb);
-	});
+		routingdb.save(function(err){
+	
+			if(err)
+				throw err;
+	
+			console.log("routing info added : " + routingdb);
+		});
 }
 
 //update configuration in routing table

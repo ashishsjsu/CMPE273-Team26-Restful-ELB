@@ -7,4 +7,6 @@ var loadbalance = new Schema({configid: String, targeturl: [], proxyurl: String,
 
 var ProxyConfig = new Schema({ClientId: String , Simpleproxy: [simpleproxy], Loadbalance: [loadbalance]});
 
+var gzip = new Schema({targrtyrl:[],proxyurl: String});
+
 module.exports = mongoose.model("ProxyDB", ProxyConfig)
