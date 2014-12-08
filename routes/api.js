@@ -36,10 +36,15 @@ exports.addProxyConfiguration = function(req, res){
 			var count1 = " ";		
 			
 			if(proxydb.Simpleproxy != undefined)
-			{
+			{	
+				count1='0'
+				console.log("In simple proxy array")
 				proxydb.Simpleproxy.forEach(function(item){
 				count1=item.configid;
 				console.log("string count" + count1)
+				//console.log("Item" + item)
+				//if(item===null)
+					//{count1='0'}
 				})
 			}
 			count=parseInt(count1);
