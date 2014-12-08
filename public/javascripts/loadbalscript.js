@@ -4,6 +4,8 @@ $(document).ready(function(){
 		
 		populateTable();
 
+        $('#refreshbtn').on('click', refreshData);
+
 		$('#btnAddConfig').on('click', appendRows);
 
 		$('#btnRemoveConfig').on('click', removeLastRow);
@@ -24,6 +26,13 @@ $(document).ready(function(){
 	//	appendRows();
 });
 
+
+function refreshData(event)
+{   
+    event.preventDefault();
+
+    populateTable();
+}
 
 // Fill table with data
 function populateTable() {
