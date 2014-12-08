@@ -7,6 +7,7 @@ var express = require('express'),
 	crypto = require('crypto'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
+	forwardapi = require('./routes/forwardapi');
 	path = require('path');
 	
 var port = process.env.port || 8080; 
@@ -19,6 +20,7 @@ var routes = require('./routes/index');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.get('/simpleProxy', test.getSimpleProxyPage);
 app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
 app.get('/http', test.getHttpToHttpsPage);
@@ -75,6 +77,25 @@ router.route('/simpleproxy/:configid')
 
 	//delete proxy configuration
 	.delete(api.deleteProxyConfiguration);
+
+	
+//routes for simpleproxy POST and GET	
+router.route('/forwardproxy')
+	//post configuration parameters
+	.post(forwardapi.addProxyConfiguration)
+
+	//get configuration parameters
+	.get(forwardapi.getProxyConfiguration)
+
+
+//routes to PUT and DELETE simpleproxy configuration
+router.route('/forwardproxy/:configid')
+
+	//update configuration parameters
+	.put(forwardapi.updateProxyConfiguration)
+
+	//delete proxy configuration
+	.delete(forwardapi.deleteProxyConfiguration);
 
 //routes for change response proxy configuration
 router.route('/simpleproxy/changeresponse')

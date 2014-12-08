@@ -22,9 +22,9 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 
 <body>
 <div class = "cointainer">
-	<nav class="navbar navbar-default" role="navigation">
- 		 <div class="container-fluid">
- 			   <div class="navbar-header">
+    <nav class="navbar navbar-default" role="navigation">
+         <div class="container-fluid">
+               <div class="navbar-header">
       <a class="navbar-brand" href="#">     </a>
       <p style=" text-indent: 16em;">
       <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
@@ -118,7 +118,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 
                                         <th>ProxyURL</th>
 
-                                        <th>HTTPS Enabled</th>
+                                        <th>Forward URL</th>
 
                                         <th>Status</th>
 
@@ -157,6 +157,14 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 
                                         <td><input id="inputProxyTargetURL"
                                         placeholder="Target URL" type=
+                                        "text"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Forward URL:</td>
+
+                                        <td><input id="inputProxyForwardURL"
+                                        placeholder="Forward URL" type=
                                         "text"></td>
                                     </tr>
 
@@ -216,6 +224,14 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         "Target URL" type="text"></td>
                                     </tr>
 
+                                     <tr>
+                                        <td>Forward URL:</td>
+
+                                        <td><input class="textBox" id=
+                                        "updateProxyForwardURL" placeholder=
+                                        "Forward URL" type="text"></td>
+                                    </tr>
+
                                     <tr>
                                         <td>Latency:</td>
 
@@ -251,5 +267,5 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
      <script src="/javascripts/bootstrap.min.js"></script> <!-- Custom JS -->
      <script src="/javascripts/script.js"></script> <script src="/javascripts/bootstrap.js"></script> <script src=
 "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="/javascripts/global.js"></script>
+    <script src="/javascripts/simpleProxy.js"></script>
 </body>

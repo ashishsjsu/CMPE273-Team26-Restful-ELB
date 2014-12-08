@@ -6,6 +6,7 @@ var arguments = process.argv.splice(2);
   	 app = express(),
      bodyParser = require('body-parser'),
      proxyapi = require('./routes/proxyserverapi'),
+     forwardproxyapi = require('./routes/forwardproxybackendapi'),
      loadbalancerapi = require('./routes/loadbalancerapi'),
      ChangeResponse = require("./routes/ChangeResponse"),
  	 gzip = require('./routes/gzip'),
@@ -54,6 +55,16 @@ router.route("/reverseproxy")
 router.route("/reverseproxy/:configid")
 	
 	.delete(proxyapi.stopReverseProxyServer);
+
+
+//route to create a simpleproxy server as per requested configurations
+router.route("/forwardproxy")
+
+	.post(forwardproxyapi.createForwardProxyServer);
+
+router.route("/forwardproxy/:configid")
+	
+	.delete(forwardproxyapi.stopForwardProxyServer)
 	
 //temporary function to insert routing info in routing table
 router.route("/routinginfo")

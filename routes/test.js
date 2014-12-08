@@ -9,6 +9,12 @@ function getOnPage(req, res) {
 
 exports.getOnPage = getOnPage;
 
+function getSimpleProxyPage(req, res) {
+	res.render('simpleProxy',{});
+}
+
+exports.getSimpleProxyPage = getSimpleProxyPage;
+
 function getLoadBalancerPage(req, res) {
 	res.render('LoadBalancer',{});
 }
