@@ -25,3 +25,7 @@ exports.getHttpToHttpsPage = getHttpToHttpsPage;
 exports.getChangeResponsePage = function(req, res){
 	res.render('ChangeResponse', {});
 }
+
+exports.getGzip = function(req,res){
+	res.render('gzip',{});
+}

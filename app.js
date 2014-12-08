@@ -8,6 +8,7 @@ var express = require('express'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
 	path = require('path');
+	gzip = require('./routes/gzip')
 	
 var port = process.env.port || 8080; 
 var test = require('./routes/test');
@@ -23,7 +24,7 @@ app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
 app.get('/http', test.getHttpToHttpsPage);
 app.get('/changeresponse', test.getChangeResponsePage)
-
+app.get('/gzip', test.getGzip);
 //configure app to use bodyParser
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -98,6 +99,17 @@ router.route('/simpleproxy/loadbalancer/:configid/instance')
 	.delete(api.removeInstanceFromLoadBalancer)
 
 	.put(api.addInstanceinLoadBalancer);
+
+//Gzip Routes
+router.route('/createGzip')
+	.post(gzip.insertInDb)
+
+router.route('/createGzip/:configid')
+	.delete(gzip.deleteGzip)
+	
+router.route('/getGzip')	
+	.get(gzip.getGzip)
+
 
 //Register our routes
 app.use('/api', router); //all our routes will bw prefixed with /api

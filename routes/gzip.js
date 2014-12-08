@@ -2,10 +2,14 @@ var httpProxy = require('http-proxy'),
  	http = require('http'),
  	connect = require('connect')
  	GzipModel = require("../models/Gzip")
+ 	
 function creategzip(req,res){
 	//var url = gzipModel.findOne
-	var url =req.body.url
+	console.log("In creategzip")
+	var url =req.body.targeturl
+	console.log("In creategzip url "+url)
 	var port = generatePortNumber()
+	console.log("In creategzip port "+port)
 	gzipserver=connect.createServer(
 			  connect.compress({
 			    threshold: 1
@@ -36,7 +40,9 @@ function creategzip(req,res){
 			var proxy = httpProxy.createProxyServer({
 				  target: url
 				});
-				res.json({msg:"gzip running on: " + port});
+			
+				//res.json({msg:"gzip running on: " + port});
+				//console.log("In creategzip proxy "+proxy)
 				//res.end();
 				return port;
 }
@@ -44,28 +50,53 @@ function creategzip(req,res){
 exports.insertInDb=function(req, res){
 	//gzipModel.findOne
 	var gzipModel = new GzipModel;
-	var Id = GzipModel.count({},function(err,count){
-		
-	if(err)
-		throw err
-	console.log("gzip count" + count)
-	Id=count+1;
-	console.log("gzip Id" + Id)
-	gzipModel.id = parseInt(Id)
-	gzipModel.proxyurl = 'http://localhost:'+port
-	gzipModel.targeturl = req.body.url
-	gzipModel.save(function(err){
-
-		if(err)
-			throw err;
-
-		console.log("gzip added : " + gzipModel);
-	});
-	});
-	console.log("gzip outside count" + Id)
-	port = creategzip(req,res)
+	var port =0
+	//var Id = GzipModel.count({},function(err,count){
+	console.log("targetUrl: " + req.body.targeturl)	
+	//if(err)
+		//throw err
+	//console.log("gzip count" + count)
+	//Id=count+1;
+	//console.log("gzip Id" + Id)
 	//gzipModel.id = parseInt(Id)
-	
+	//var gzipdb = [];
+	GzipModel.find({},function(err, gzipdb){		
+		//var gzipMap = {}
+		var count1 = " ";	
+		count1='0'
+			console.log("gzipdb "+gzipdb)
+		if(gzipdb!= null)
+		{				
+			//console.log("In simple proxy array")
+			gzipdb.forEach(function(item){
+			count1=item.configid;
+			//console.log("string count" + count1)
+			//console.log("Item" + item)
+			//if(item===null)
+				//{count1='0'}
+			})
+		}
+		count=parseInt(count1);
+		count++;
+		console.log("count" + count)
+		port = creategzip(req,res)
+		console.log("In createindb "+port)
+		gzipModel.configid = count;
+		gzipModel.proxyurl = 'http://localhost:'+port
+		gzipModel.targeturl = req.body.targeturl
+		
+		//port = creategzip(req,res)
+		gzipModel.save(function(err){
+			if(err)
+				throw err;
+			console.log("gzip added : " + gzipModel);
+		});		
+});
+
+	//console.log("gzip outside count" + Id)
+	//port = creategzip(req,res)
+	//gzipModel.id = parseInt(Id)
+	//res.json({msg:"gzip running on: " + port});
 	res.end();
 }
 
@@ -89,9 +120,40 @@ function generatePortNumber()
 }
 
 function getGzip(req, res){
-	console.log("in gzip");
-	res.render('gzip',{});
-	
+	//console.log("in gzip");
+	//res.render('gzip',{});
+	GzipModel.find({}, function(err, docs){
+		if(err)
+			throw err;
+		res.json(docs);
+	});
 }
 
 exports.getGzip = getGzip;
+
+exports.deleteGzip = function(req, res){
+	var query = {};
+	
+	var update = { $pull  : {configid: req.params.configid}};
+
+	//GzipModel.findOneAndUpdate(query, update, function(err, data){
+
+		//	res.send( (err === null) ? { msg: '' } : { msg: err });
+	//})
+
+	//
+	deleteGzipInfo(req.params.configid);
+
+}//deleteProxyConfiguration
+
+
+//delete proxy configuration from Routing table
+function deleteGzipInfo(configid){
+
+	GzipModel.remove({'configid' : configid}, function(err, data){
+		if(err)
+			throw err;
+
+		console.log((err === null) ? { msg: 'Deleted' + data } : { msg: err });	
+	})
+}

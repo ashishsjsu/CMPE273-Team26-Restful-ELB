@@ -71,7 +71,7 @@ exports.addProxyConfiguration = function(req, res){
 //Simpleproxy GET
 //retrieve all proxy configurations for simpleproxy
 exports.getProxyConfiguration = function(req, res){
-
+		console.log("in getprocy config")
 		//retrieve configuration from routing table
 		RoutingInfo.find({}, function(err, docs){
 			if(err)
