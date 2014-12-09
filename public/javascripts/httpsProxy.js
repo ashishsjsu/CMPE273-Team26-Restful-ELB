@@ -232,10 +232,10 @@ function updateProxy(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-     if($('#updateProxy fieldset span#proxyID').text() === '')
-    {
-        errorCount++;
-    }
+    $('#updateProxy input[type=text], textarea').each(function(index, val) {
+    	if($(this).val() === '') { errorCount++; }
+    });
+
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
 
@@ -370,7 +370,7 @@ function stopProxyServer(){
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
+    $('#updateProxy input[type=text], textarea').each(function(index, val) {
         if($(this).val() === '') { errorCount++; }
     });
 
@@ -406,7 +406,7 @@ function stopProxyServer(){
 function startProxyServer(){
 
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
+    $('#updateProxy input[type=text], textarea').each(function(index, val) {
         if($(this).val() === '') { errorCount++; }
     });
 
