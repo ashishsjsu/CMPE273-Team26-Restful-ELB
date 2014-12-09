@@ -31,7 +31,9 @@ $(document).ready(function() {
     $('#btnStopProxy').on('click', stopProxyServer);
 
     $('#btnGo').on('click', saveUser);
-
+    
+    $('#btnAddHttpsProxy').on('click', addHttpsProxy);
+    
 });
 
 
@@ -52,7 +54,7 @@ function populateTable() {
 
 
     // jQuery AJAX call for JSON
-    $.getJSON( '/api/simpleproxy/', function( data ) {
+    $.getJSON( '/api/secure/', function( data ) {
 
         // Stick our proxy data array into a proxylist variable in the global object
        //proxyListData = data.Simpleproxy;
@@ -108,9 +110,10 @@ function showProxyInfo(event) {
     $('#updateProxy fieldset input#updateProxyTargetURL').val(thisProxyObject.targeturl);
     $('#updateProxy fieldset input#updateProxyLatency').val(thisProxyObject.latency);
     
+    
 };
 
-function addHttpsProxy(event) {
+function addProxy(event) {
     event.preventDefault();
 
 //    user =  $('#txtUser').val();
@@ -118,7 +121,7 @@ function addHttpsProxy(event) {
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
     
-    if($.trim($('#addProxy fieldset input#inputProxyTargetURL').val()).length < 1) { errorCount++; }
+    if($.trim($('#addHttpsProxy fieldset input#inputHttpsProxyTargetURL').val()).length < 1) { errorCount++; }
     
 
     // Check and make sure errorCount's still at zero
@@ -128,8 +131,7 @@ function addHttpsProxy(event) {
         var newProxy = {
           
             'targeturl': $('#addHttpsProxy fieldset input#inputHttpsProxyTargetURL').val(),
-            'latency': $('#addHttpsProxy fieldset input#inputHttpsLatency').val(),
-            'httpsFlag': $('#addHttpsProxy fieldset input#inputHttpsFlag').val()
+            'latency': $('#addHttpsProxy fieldset input#inputHttpsLatency').val()
 
         }
 
@@ -137,7 +139,7 @@ function addHttpsProxy(event) {
         $.ajax({
             type: 'POST',
             data: newProxy,
-            url: '/proxyserver/secure',
+            url: '/api/simpleproxy',
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -165,7 +167,8 @@ function addHttpsProxy(event) {
     }
 };
 
-function addProxy(event) {
+
+function addHttpsProxy(event) {
     event.preventDefault();
 
 //    user =  $('#txtUser').val();
@@ -173,7 +176,7 @@ function addProxy(event) {
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
     
-    if($.trim($('#addProxy fieldset input#inputProxyTargetURL').val()).length < 1) { errorCount++; }
+    if($.trim($('#addHttpsProxy fieldset input#inputHttpsProxyTargetURL').val()).length < 1) { errorCount++; }
     
 
     // Check and make sure errorCount's still at zero
@@ -182,23 +185,25 @@ function addProxy(event) {
         // If it is, compile all proxy info into one object
         var newProxy = {
           
-            'targeturl': $('#addProxy fieldset input#inputProxyTargetURL').val(),
-            'latency': $('#addProxy fieldset input#inputLatency').val()
+            'targeturl': $('#addHttpsProxy fieldset input#inputHttpsProxyTargetURL').val(),
+            'latency': $('#addHttpsProxy fieldset input#inputHttpsLatency').val(),
+            'https': $('#addHttpsProxy fieldset input#inputHttpsFlag').is(':checked')
 
         }
+        console.log($('#addHttpsProxy fieldset input#inputHttpsFlag').is(':checked'));
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
             data: newProxy,
-            url: '/api/simpleproxy',
+            url: '/api/secure',
             dataType: 'JSON'
         }).done(function( response ) {
 
             // Check for successful (blank) response
             if (response.msg === '') {
                 // Clear the form inputs
-                $('#addProxy fieldset input').val('');
+                $('#addHttpsProxy fieldset input').val('');
 
                 // Update the table
                 populateTable();
@@ -228,7 +233,7 @@ function updateProxy(event) {
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
     $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
+    	if($(this).val() === '') { errorCount++; }
     });
 
     // Check and make sure errorCount's still at zero
@@ -245,14 +250,15 @@ function updateProxy(event) {
            // 'proxyurl': $('#updateProxy fieldset input#updateProxyURL').val(),
             'proxyurl': $('#updateProxy fieldset label#updateProxyURL').text(),
             'targeturl': $('#updateProxy fieldset input#updateProxyTargetURL').val(),
-            'latency': $('#updateProxy fieldset input#updateProxyLatency').val()
+            'latency': $('#updateProxy fieldset input#updateProxyLatency').val(),
+            'https':$('#updateProxy fieldset input#updateInputHttpsFlag').is(':checked')
         }
 
        
         $.ajax({
             type: 'PUT',
             data: newProxy,
-            url: '/api/simpleproxy/'+id, // + $('#proxyID').text(),
+            url: '/api/secure/'+id, // + $('#proxyID').text(),
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -264,6 +270,7 @@ function updateProxy(event) {
                 $('#updateProxy fieldset label#updateProxyURL').text('');
                 $('#updateProxy fieldset input#updateProxyTargetURL').val('');
                 $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset input#updateInputHttpsFlag').attr('checked',false);
                 $('#updateProxy fieldset span#proxyID').text('');
 
                 // Update the table
@@ -299,7 +306,7 @@ function deleteProxy(event) {
         $.ajax({
                  type : 'DELETE',
                  data: '',
-                 url : 'http://localhost:8006/proxyserver/reverseproxy/'+$(this).attr('rel'),
+                 url : 'http://localhost:8006/proxyserver/httpsProxy/'+$(this).attr('rel'),
                  dataType : 'JSON'
 
         }).done(function(response){
@@ -325,7 +332,7 @@ function deleteProxy(event) {
         $.ajax({
             type: 'DELETE',
             data: newProxy,
-            url: '/api/simpleproxy/'+$(this).attr('rel'),
+            url: '/api/secure/'+$(this).attr('rel'),
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -336,6 +343,7 @@ function deleteProxy(event) {
                 $('#updateProxy fieldset label#updateProxyURL').text('');
                 $('#updateProxy fieldset input#updateProxyTargetURL').val('');
                 $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset input#updateInputHttpsFlag').attr('checked',false);
                 $('#updateProxy fieldset span#proxyID').text('');
             }
             else {
@@ -373,7 +381,7 @@ function stopProxyServer(){
         $.ajax({
                  type : 'DELETE',
                  data: '',
-                 url : 'http://localhost:8006/proxyserver/reverseproxy/'+configid,
+                 url : 'http://localhost:8006/proxyserver/httpsProxy/'+configid,
                  dataType : 'JSON'
 
         }).done(function(response){
@@ -382,6 +390,7 @@ function stopProxyServer(){
                 $('#updateProxy fieldset label#updateProxyURL').text('');
                 $('#updateProxy fieldset input#updateProxyTargetURL').val('');
                 $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset input#updateInputHttpsFlag').attr('checked',false);
                 $('#updateProxy fieldset span#proxyID').text('');
 
                         populateTable();
@@ -415,7 +424,7 @@ function startProxyServer(){
         $.ajax({
              type : 'POST',
              data : data,
-             url : 'http://localhost:8006/proxyserver/reverseproxy',
+             url : 'http://localhost:8006/proxyserver/httpsProxy',
              dataType : 'JSON'
 
         }).done(function(response){
@@ -424,6 +433,7 @@ function startProxyServer(){
                 $('#updateProxy fieldset label#updateProxyURL').text('');
                 $('#updateProxy fieldset input#updateProxyTargetURL').val('');
                 $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset input#updateInputHttpsFlag').attr('checked',false);
                 $('#updateProxy fieldset span#proxyID').text('');
             populateTable();
 

@@ -8,6 +8,7 @@ var express = require('express'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
 	forwardapi = require('./routes/forwardapi');
+	HTTP = require('./routes/httpTohttps'),
 	path = require('path');
 	gzip = require('./routes/gzip')
 	
@@ -102,6 +103,21 @@ router.route('/forwardproxy/:configid')
 
 	//delete proxy configuration
 	.delete(forwardapi.deleteProxyConfiguration);
+
+//routes for HttpToHttps api here
+router.route("/secure")
+	//post configuration parameters
+	.post(HTTP.addProxyConfiguration)
+	//get configuration parameters
+	.get(HTTP.getProxyConfiguration);
+
+router.route('/secure/:configid')
+
+	//update configuration parameters
+	.put(HTTP.updateProxyConfiguration)
+
+	//delete proxy configuration
+	.delete(HTTP.deleteProxyConfiguration);
 
 //routes for change response proxy configuration
 router.route('/simpleproxy/changeresponse')

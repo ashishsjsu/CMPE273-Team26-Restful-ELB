@@ -10,7 +10,7 @@ var arguments = process.argv.splice(2);
      loadbalancerapi = require('./routes/loadbalancerapi'),
      ChangeResponse = require("./routes/ChangeResponse"),
  	 gzip = require('./routes/gzip'),
- 	HTTP = require('./routes/httpTohttps'),
+ 	HTTP = require('./routes/httpTohttpsProxyBackendapi'),
  	websockproxy = require('./routes/Websocketproxyapi');
  
 //get mongodb connection instance
@@ -100,10 +100,17 @@ router.route("/ChangeResponse/:configid")
 .delete(ChangeResponse.stopChangeResponseProxy);
 
 
-//routes for loadbalacer api here
-router.route("/secure")
+//routes for HttpToHttps api here
+router.route("/httpsProxy")
 
-	.get(HTTP.forwardRequestSecure);
+	.post(HTTP.createHttpsProxyServer);
+
+	//.get(HTTP.forwardRequestSecure);
+
+router.route("/httpsProxy/:configid")
+
+	.delete(HTTP.stopForwardProxyServer);
+
 
 router.route('/websocketproxy')
 	
