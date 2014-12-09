@@ -154,6 +154,10 @@ function buildLoadBalancer(loadconfig){
    				if(err)
 					res.send(err)
 
+				if(routingdb === null)
+				{
+					clearInterval(poll);
+				}
 				if(!Boolean(loadbaldb.status))
 				{
 					console.log("Attempting polling stop");

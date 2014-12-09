@@ -204,7 +204,7 @@ function addHttpsProxy(event) {
             if (response.msg === '') {
                 // Clear the form inputs
                 $('#addHttpsProxy fieldset input').val('');
-
+                $('#addHttpsProxy fieldset input#inputHttpsFlag').attr('checked', false);
                 // Update the table
                 populateTable();
 
@@ -232,10 +232,10 @@ function updateProxy(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-    	if($(this).val() === '') { errorCount++; }
-    });
-
+     if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
 

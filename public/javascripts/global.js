@@ -59,7 +59,12 @@ function populateTable() {
        proxyListData = data;
 
         // For each item in our JSON, add a table row and cells to the content string
-        $.each(proxyListData, function(){
+        $.each(proxyListData, function(){   
+
+            var https;
+
+            if(!Boolean(this.https)){ https = false; }
+            else { https = true; }
 
             tableContent += '<tr>';
             tableContent += '<td><a href="#" class="linkshowproxy" rel="' + this.configid + '" title="Show Details">' + this.configid + '</a></td>';
@@ -67,7 +72,7 @@ function populateTable() {
             tableContent += '<td>' + this.targeturl + '</td>';
             tableContent += '<td>' + this.latency + '</td>';
             tableContent += '<td>' + this.proxyurl + '</td>';
-            tableContent += '<td>' + this.https + '</td>';
+            tableContent += '<td>' + https + '</td>';
 
             if(Boolean(this.status))
             {
@@ -227,9 +232,11 @@ function updateProxy(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
@@ -362,9 +369,12 @@ function stopProxyServer(){
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     var configid = $('#updateProxy fieldset span#proxyID').text();
 
@@ -397,9 +407,12 @@ function stopProxyServer(){
 function startProxyServer(){
 
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+  
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     if(errorCount == 0)
     {

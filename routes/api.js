@@ -38,18 +38,14 @@ exports.addProxyConfiguration = function(req, res){
 			if(proxydb.Simpleproxy != undefined)
 			{	
 				count1='0'
-				console.log("In simple proxy array")
 				proxydb.Simpleproxy.forEach(function(item){
 				count1=item.configid;
-				console.log("string count" + count1)
-				//console.log("Item" + item)
 				//if(item===null)
 					//{count1='0'}
 				})
 			}
 			count=parseInt(count1);
 			count++;
-			console.log("count" + count)
 
 			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
 
@@ -71,7 +67,6 @@ exports.addProxyConfiguration = function(req, res){
 //Simpleproxy GET
 //retrieve all proxy configurations for simpleproxy
 exports.getProxyConfiguration = function(req, res){
-		console.log("in getprocy config")
 		//retrieve configuration from routing table
 		RoutingInfo.find({}, function(err, docs){
 			if(err)
@@ -156,7 +151,6 @@ function insertSimpleproxyRoutingInfo(count, targeturl, latency, https, original
 			if(err)
 				throw err;
 	
-			console.log("routing info added : " + routingdb);
 		});
 }
 
@@ -218,7 +212,6 @@ function insertLoadBalRoutingInfo(configid, targetinstances)
 	loadbalroutingdb.save(function(err){
 		if(err)
 			throw err;
-		console.log("Load Balancer config added " + loadbalroutingdb);
 	});
 
 }

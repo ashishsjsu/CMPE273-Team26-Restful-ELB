@@ -28,7 +28,6 @@ app.use(bodyParser.json());
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
-	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
@@ -42,7 +41,6 @@ app.use('/proxyserver', router);
 
 //app middleware
 router.use(function(req, res, next){
-	console.log("Proxyserver middleware...");
 	next();
 });
 

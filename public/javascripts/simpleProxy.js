@@ -35,6 +35,7 @@ $(document).ready(function() {
 });
 
 
+
 function saveUser(event)
 {
     event.preventDefault();
@@ -174,9 +175,15 @@ function updateProxy(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
+    /*$('#updateProxy input').each(function(index, val) {
         if($(this).val() === '') { errorCount++; }
-    });
+    });*/
+
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
@@ -313,9 +320,11 @@ function stopProxyServer(){
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     var configid = $('#updateProxy fieldset span#proxyID').text();
 
@@ -349,9 +358,12 @@ function stopProxyServer(){
 function startProxyServer(){
 
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+   
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     if(errorCount == 0)
     {

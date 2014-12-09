@@ -4,7 +4,7 @@ $(document).ready(function(){
 		
 		populateTable();
 
-        $('#refreshbtn').on('click', refreshData);
+        $('#btnRefresh').on('click', refreshData);
 
 		$('#btnAddConfig').on('click', appendRows);
 

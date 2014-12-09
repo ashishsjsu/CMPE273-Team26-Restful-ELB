@@ -79,12 +79,13 @@ exports.stopForwardProxyServer = function(req, res){
 	var server = map[req.params.configid];
 	if(server === undefined) {
 		console.log("Server not running");
+		res.json({msg : "Server not running"});
 	} else {
 		server.close();	
 		delete map[req.params.configid];
+		res.json({msg : "Proxy Stopped"});
 	}
 	
-	res.json({msg : "Proxy Stopped"});
 
 	RoutingInfo.update({'configid' : req.params.configid}, { $set : {'status' : false, 'proxyurl' : null} }, function(err, data){
 		if(err)
@@ -250,6 +251,10 @@ function buildProxyServer(config)
 				if(err)
 					res.send(err)
 
+				if(routingdb === null)
+				{
+					clearInterval(poll);
+				}
 				if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
 				{
 					flag = false;
