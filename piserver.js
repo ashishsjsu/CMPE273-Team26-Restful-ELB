@@ -24,8 +24,7 @@ function estimatePi() {
 // Create a basic server that responds to any request with the pi estimation
 var server = http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type' : 'text/plain'});
-    res.write("Request successfully proxied to " + args[0]);
-    res.end('Pi: ' + estimatePi());
+    res.end("Request successfully proxied to 8000 " + args[0] + 'Pi: ' + estimatePi());
 });
 
 // Listen to a specified port, or default to 8000

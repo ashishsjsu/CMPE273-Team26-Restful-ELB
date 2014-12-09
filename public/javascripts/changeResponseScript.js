@@ -252,7 +252,7 @@ function startChangeResProxyServer(event){
         $.ajax({
              type : 'POST',
              data : data,
-             url : 'http://localhost:8006/proxyserver/reverseproxy',
+             url : 'http://localhost:8006/proxyserver/ChangeResponse',
              dataType : 'JSON'
 
         }).done(function(response){

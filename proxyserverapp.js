@@ -94,7 +94,10 @@ router.route('/loadbalancer/:configid/appinstance')
 	.delete(loadbalancerapi.removeFromloadBalancer);
 
 router.route("/ChangeResponse")
-.post(ChangeResponse.createResponse);
+.post(ChangeResponse.createChangeResponseProxy);
+
+router.route("/ChangeResponse/:configid")
+.delete(ChangeResponse.stopChangeResponseProxy);
 
 
 //routes for loadbalacer api here
