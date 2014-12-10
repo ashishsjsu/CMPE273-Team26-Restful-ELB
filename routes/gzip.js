@@ -2,7 +2,7 @@ var httpProxy = require('http-proxy'),
  	http = require('http'),
  	connect = require('connect')
  	GzipModel = require("../models/Gzip")
- 	
+ 	compression = require('compression')
 function creategzip(req,res){
 	//var url = gzipModel.findOne
 	console.log("In creategzip")
@@ -11,15 +11,16 @@ function creategzip(req,res){
 	var port = generatePortNumber()
 	console.log("In creategzip port "+port)
 	gzipserver=connect.createServer(
-			  connect.compress({
-			    threshold: 1
-			  }),
+			  //connect.compress({
+			    //threshold: 1
+			  //}),			
+			compression(),
 			  function (req, res) {
+				console.log("in compression")
 			    proxy.web(req, res);
 			  }
 			  
-			);//.listen(port);
-			
+			);//.listen(port);	
 		process.on('uncaughtException', function (err) {
     	
     	//assign a new port if previous one is already in use and update routing table
@@ -100,18 +101,6 @@ exports.insertInDb=function(req, res){
 	res.end();
 }
 
-/*function getId()
-{
-	var count = 0;			
-	if(gzipModel != undefined)
-	{
-		gzipModel.forEach(function(item){
-			count++;
-		})
-	}
-	count++;
-	return count;
-}*/
 	
 function generatePortNumber()
 {
@@ -120,8 +109,6 @@ function generatePortNumber()
 }
 
 function getGzip(req, res){
-	//console.log("in gzip");
-	//res.render('gzip',{});
 	GzipModel.find({}, function(err, docs){
 		if(err)
 			throw err;
@@ -136,12 +123,6 @@ exports.deleteGzip = function(req, res){
 	
 	var update = { $pull  : {configid: req.params.configid}};
 
-	//GzipModel.findOneAndUpdate(query, update, function(err, data){
-
-		//	res.send( (err === null) ? { msg: '' } : { msg: err });
-	//})
-
-	//
 	deleteGzipInfo(req.params.configid);
 
 }//deleteProxyConfiguration
