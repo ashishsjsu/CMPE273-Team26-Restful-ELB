@@ -1,8 +1,9 @@
 
 //connect to database
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb");
+//mongoose.connect("mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb");
 
+mongoose.connect("mongodb://localhost:27017/proxydb");
 //require the colletions
 var ProxyConfig = require("../models/ProxyConfigModel");
 var RoutingInfo = require("../models/RoutingInfo");
@@ -34,12 +35,19 @@ exports.addProxyConfiguration = function(req, res){
 				res.send(err);
 
 			var count1 = " ";		
-			
+			var maxcount = 0; 
+
 			if(proxydb.Simpleproxy != undefined)
 			{	
 				count1='0'
 				proxydb.Simpleproxy.forEach(function(item){
-				count1=item.configid;
+
+				if(maxcount < parseInt(item.configid))
+				{
+					maxcount  = parseInt(item.configid);
+				}
+
+				count1=maxcount;
 				//if(item===null)
 					//{count1='0'}
 				})
@@ -176,14 +184,29 @@ exports.addLoadBalancerConfiguration = function(req, res){
 				res.send(err);
 	
 			var count = 0;		
-			
+			var count1 = " ";		
+			var maxcount = 0; 
 			if(proxydb.Loadbalance != undefined)
 			{
+				count1='0'
+
 				proxydb.Loadbalance.forEach(function(item){
-					count++;
-				})
+					
+					var confid = parseInt(item.configid.substring(2));
+
+					if(maxcount < parseInt(confid))
+					{
+						maxcount  = confid;
+					}
+
+					count1 = maxcount;
+
+				})				
 			}	
 			
+			count=parseInt(count1);
+			count++;
+
 			var targets = req.body.config;
 				
 				proxydb.Loadbalance.push({configid: "L-"+count, targeturl: targets, proxyurl : ''});

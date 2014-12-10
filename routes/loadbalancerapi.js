@@ -122,8 +122,12 @@ function buildLoadBalancer(loadconfig){
   		res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
    		res.setHeader("Pragma", "no-cache");
    		res.setHeader("Expires", 0);
+
+   		console.log("Targets : " + loadconfig.targets);
    	
    		var targeturl = {target : loadconfig.targets.shift()};
+
+   		console.log("targeturl: " + targeturl.target);
 
    		proxy.web(req, res, targeturl);
 
@@ -154,7 +158,7 @@ function buildLoadBalancer(loadconfig){
    				if(err)
 					res.send(err)
 
-				if(routingdb === null)
+				if(loadbaldb === null)
 				{
 					clearInterval(poll);
 				}

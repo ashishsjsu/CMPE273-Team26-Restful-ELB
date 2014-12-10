@@ -6,8 +6,6 @@ var proxyListData = [];
 $(document).ready(function() {
 
     // Populate the user table on initial page load
-    //populateTable();
-console.log ("inside the Response Proxy");
     populateChangeResponseTable();
     // proxuy URL link click
     $('#changeproxyList table tbody').on('click', 'td a.linkshowproxy', showProxyInfo);
@@ -21,7 +19,7 @@ console.log ("inside the Response Proxy");
    
     $('#btnUpdateProxy').on('click', updateProxy);
 
-    
+    $('#updtbtn').on('click', populateChangeResponseTable)
 
 
 });
@@ -53,9 +51,25 @@ function populateChangeResponseTable() {
            // tableContent += '<td>' + this.port + '</td>';
             tableContent += '<td>' + this.targeturl + '</td>';
             tableContent += '<td>' + this.proxyurl + '</td>';
-            tableContent += '<td>' + this.originalresponse + '</td>';
-            tableContent += '<td>' + this.modifiedresponse + '</td>';
 
+            if(this.originalresponse === undefined)
+            {
+                 tableContent += '<td>' +'</td>';
+
+            }
+            else
+            {
+                tableContent += '<td>' + this.originalresponse +'</td>';
+            }
+
+            if(this.modifiedresponse === undefined)
+            {
+                tableContent += '<td>' + '</td>';
+            }
+            else
+            {   
+                tableContent += '<td>' + this.modifiedresponse + '</td>';
+            }
 
             if(Boolean(this.status))
             {
@@ -112,16 +126,8 @@ function addChangeResponseProxy()
     {
     	event.handled = true;
 
-    // Super basic validation - increase errorCount variable if any fields are blank
-    var errorCount = 0;
-    $('#addChangeProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
-
-    if(errorCount === 0)
-    {
         var newProxy ={ 'targeturl' : $('#addChangeProxy fieldset input#inputChProxyTargetURL').val(),
-                        'stringtomatch' : $('#addChangeProxy fieldset input#inputStringtoreplace').val(),
+                        'stringtomatch' : $('#addChangeProxy fieldset input#inputOriginal').val(),
                         'stringtoreplace' : $('#addChangeProxy fieldset input#inputReplacement').val()
                     }
 
@@ -134,16 +140,14 @@ function addChangeResponseProxy()
 
              // Check for successful (blank) response
             if (response.msg === '') {
+                
+                populateChangeResponseTable();
                 // Clear the form inputs
                 $('#addChangeProxy input').val('');
              // Clear the form inputs
                 $('#addChangeProxy fieldset input#inputChProxyTargetURL').val('');
-                $('#addChangeProxy fieldset input#inputStringtoreplace').text('');
-                $('#addChangeProxy fieldset input#inputReplacement').val('');
-                
-                
-                populateChangeResponseTable();
-                
+                $('#addChangeProxy fieldset input#inputOriginal').val('');
+                $('#addChangeProxy fieldset input#inputReplacement').val('');                
             }
             else {
 
@@ -152,14 +156,6 @@ function addChangeResponseProxy()
 
             }
         })
-
-    }//if
-    else
-    {
-        alert("Fill in all the fields");
-        return false;
-    }
-        
     }
 }
 
@@ -335,6 +331,10 @@ console.log("errorCount:" + errorCount)
 function updateProxy(event) {
     event.preventDefault();
 
+
+    if(event.handled !== true){
+
+        event.handled = true;
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
 
@@ -347,18 +347,17 @@ function updateProxy(event) {
     if(errorCount === 0) {
 
         var purl = $('#updateProxy fieldset input#updateProxyTargetURL').val();
-        alert("Updating to "+ purl);
-
-        // If it is, compile all proxy info into one object
+       
+         // If it is, compile all proxy info into one object
         var id = $('#proxyID').text()
         var newProxy = {
 
             'configid': id,
            // 'proxyurl': $('#updateProxy fieldset input#updateProxyURL').val(),
-            'proxyurl':  $('#addChangeProxy fieldset label#updateProxyURL').text(),
-            'targeturl': $('#addChangeProxy fieldset input#updateProxyTargetURL').val(),
-            'originalstring':  $('#addChangeProxy fieldset input#updateOriginalString').val(),
-            'replacementstring': $('#addChangeProxy fieldset input#updateNewString').val(),
+            'proxyurl':  $('#updateProxy fieldset label#updateProxyURL').text(),
+            'targeturl': $('#updateProxy fieldset input#updateProxyTargetURL').val(),
+            'originalstring':  $('#updateProxy fieldset input#updateOriginalString').val(),
+            'replacementstring': $('#updateProxy fieldset input#updateNewString').val(),
             'latency' : 0        
             }
 
@@ -377,15 +376,13 @@ function updateProxy(event) {
                 populateChangeResponseTable();
             	
                 // Clear the form inputs
-                $('##addChangeProxy fieldset label').val('');
-                $('##addChangeProxy fieldset input#updateProxyURL').text('');
-                $('#addChangeProxy fieldset input#updateProxyTargetURL').val('');
-                $('#addChangeProxy fieldset input#inputOriginal').val('');
-                $('##addChangeProxy fieldset fieldset span#inputReplacement').text('');
-
-                
-
-            }
+                $('#updateProxy fieldset label').val('');
+                $('#updateProxy fieldset input#updateProxyURL').text('');
+                $('#updateProxy fieldset input#updateProxyTargetURL').val('');
+                $('#updateProxy fieldset input#updateOriginalString').val('');
+                $('#updateProxy fieldset input#updateNewString').val('');
+                $('#updateProxy fieldset span#proxyID').text('');
+     }
             else {
 
                 // If something goes wrong, alert the error message that our service returned
@@ -398,6 +395,8 @@ function updateProxy(event) {
         // If errorCount is more than 0, error out
         alert('Please fill in all fields');
         return false;
+    }
+
     }
 };
 

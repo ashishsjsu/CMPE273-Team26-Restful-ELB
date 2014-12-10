@@ -202,9 +202,6 @@ function buildProxyServer(config)
 
   			res.setHeader("X-HTTP-Processing-Time", (new Date()).getMilliseconds() - start);
   			res.setHeader("X-HTTP-request-id", requestid);
-			console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
-  			
-			//res.end("Raw response from target: \n" + JSON.stringify(proxyRes.headers, true, 2) + "\n" + JSON.stringify(res.headers, true, 2));
 		});
 
 		//listen for error event on proxy
@@ -254,7 +251,7 @@ function buildProxyServer(config)
 				{
 					clearInterval(poll);
 				}
-				if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
+				else if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
 				{
 					flag = false;
 					console.log("Stopping the db Polling");

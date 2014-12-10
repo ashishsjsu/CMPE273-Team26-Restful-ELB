@@ -252,14 +252,16 @@ function updateProxy(event) {
            // 'proxyurl': $('#updateProxy fieldset input#updateProxyURL').val(),
             'proxyurl': $('#updateProxy fieldset label#updateProxyURL').text(),
             'targeturl': $('#updateProxy fieldset input#updateProxyTargetURL').val(),
-            'latency': $('#updateProxy fieldset input#updateProxyLatency').val()
+            'latency': $('#updateProxy fieldset input#updateProxyLatency').val(),
+            'originalstring' : '',
+            'replacementstring' : ''
         }
 
        
         $.ajax({
             type: 'PUT',
             data: newProxy,
-            url: '/api/simpleproxy/'+id, // + $('#proxyID').text(),
+            url: '/api/simpleproxy/' + $('#updateProxy fieldset span#proxyID').text(),
             dataType: 'JSON'
         }).done(function( response ) {
 

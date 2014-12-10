@@ -240,7 +240,7 @@ function buildProxyServer(config)
 				{
 					clearInterval(poll);
 				}
-				if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
+				else if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
 				{
 					flag = false;
 					clearInterval(poll);

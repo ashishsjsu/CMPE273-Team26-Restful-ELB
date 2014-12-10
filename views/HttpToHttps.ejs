@@ -26,8 +26,8 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 	<nav class="navbar navbar-default" role="navigation">
  		 <div class="container-fluid">
  			   <div class="navbar-header">
-      <a class="navbar-brand" href="/">  PROXY LIST :     </a>
-      <!-- <p style=" text-indent: 16em;"> -->
+      <a class="navbar-brand" href="/"> </a>
+       <p style=" text-indent: 16em;">
       
   	 <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
       
@@ -43,7 +43,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
     
     <a href="/loadBalancer"> <button type="button" class="btn btn-default navbar-btn"> Load Balancer</button> </a>
 
-    <a href="/httpTohttps"> <button type="button" class="btn btn-default navbar-btn"> HTTP-Secure</button> </a>
+    <a href="/httpTohttps"> <button type="button" class="btn btn-success"><strong>HTTP-Secure</strong></button> </a>
         
     </p>
     </div>
@@ -148,6 +148,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                             <h4 class="modal-title"><strong>ADD A HTTPS
                             PROXY</strong></h4>
                         </div><!-- ending of model header-->
+                        <br />
                         <div id="addHttpsProxy">
                             <fieldset>
                                 <table>
@@ -170,11 +171,6 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         <td>Enable HTTPS?</td>
                                         <td><input id="inputHttpsFlag" type="checkbox" name="httpsFlag"></td>
                                     </tr>
-                                    
-                                     <br>
-                                     </br>
-                                     
-
                                 </table><br>
                             </fieldset>
                         </div>
@@ -238,8 +234,6 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                 </table>
                             </fieldset>
                        
-                            <br>
-                            </br>
                     <div class="modal-footer">
                     <fieldset>
                         <button class="btn btn-warning navbar-btn" id="btnUpdateProxy" type="button">UPDATE PROXY</button>

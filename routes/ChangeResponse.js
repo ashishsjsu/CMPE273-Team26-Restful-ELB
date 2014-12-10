@@ -43,7 +43,6 @@ exports.createChangeResponseProxy=function(req,res) {
 	  
   config.portnumber = portnumber;
   config.configid = req.body.configid;
-  console.log(config);
 
 
   RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
@@ -55,8 +54,6 @@ exports.createChangeResponseProxy=function(req,res) {
     config.originalstring = routingdb.originalresponse;
     config.stringtoreplace = routingdb.modifiedresponse; 
 
-    console.log("Routing db: "  + routingdb);
-    console.log("Got config: " + config.originalstring +  " " + config.stringtoreplace);
 
     res.json({msg : "Proxyserver running on " + "localhost:" + config.portnumber, port: "localhost" + config.portnumber });
 
@@ -73,7 +70,7 @@ exports.stopChangeResponseProxy = function(req, res){
   var server = proxymap[req.params.configid];
   if(server === undefined) {
 
-    res.json({msg : "Server not running"});
+    //res.json({msg : "Server not running"});
 
   } else {
     server.close(); 
@@ -109,80 +106,45 @@ function buildProxyServer(config)
 				  }
 				  proxy.web(req,res);
 		         }
-});
-		  var port = generatePortNumber();
+      });
+
 		  var connectserver = http.createServer(app).listen(config.portnumber);
-		  proxymap[config.configid] = connectserver;
-		  console.log(connectserver);
-		  updateRoutingInfowithUrl(config.configid, config.portnumber);
-		 }
+		 
+      proxymap[config.configid] = connectserver;
+		  
+      updateRoutingInfowithUrl(config.configid, config.portnumber, config.originalstring, config.stringtoreplace);
 
-/////////////////////////////////////  
-  //var connectserver = connect.createServer( function (req, res, next) {
-    
-  //   var _write = res.write;
 
-    //disable favicon
-   // if(req.url === '/favicon.ico')
-   // {
-   //   console.log("favicon disabled");
-   //   res.end();
-   //   return;
-   // }
-
-   // res.write = function (data) {
-
-     // console.log("data is: " + data);
-     // _write.call(res, data.toString().replace(config.originalstring, config.stringtoreplace));
-
-   // }
-   // next();
- // },
- // function (req, res) {
-  //  proxy.web(req, res);
- // }
-  
-//)
-  //  connectserver.listen(config.portnumber);
-
-   // proxymap[config.configid] = connectserver;
-    
- //   console.log("Connectserver : " + connectserver);
 
     //poll the database at defined interval
-   // var polldb = setInterval(function(){
+    var polldb = setInterval(function(){
 
-     // RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
-      //  if(err)
-        //  res.send(err)
+      RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
+        if(err)
+          res.send(err)
 
-       // if(routingdb === null)
-        //{
-         // clearInterval(poll);
-        //}
-       // if(!Boolean(routingdb.status))  // check the status of proxy-server, if not running dnt get data
-       // {
-         // flag = false;
-         // console.log("Stopping the db Polling");
-          //clearInterval(polldb);
-        //}
-        //else
-       // {
-        //  config.targeturl = routingdb.targeturl;
-         // config.originalstring = routingdb.originalresponse;
-         // config.modifiedresponse = routingdb.modifiedresponse;
-         // console.log("Polling the db " + config.targeturl);
-       // }
-      //});
+        if(routingdb === null)
+        {
+          clearInterval(poll);
+        }
+        if(!Boolean(routingdb.status))  // check the status of proxy-server, if not running dnt get data
+        {
+          flag = false;
+            console.log("Stopping the db Polling");
+          clearInterval(polldb);
+        }
+        else
+        {
+          config.targeturl = routingdb.targeturl;
+          config.originalstring = routingdb.originalresponse;
+          config.stringtoreplace = routingdb.modifiedresponse;
+          console.log("Polling the db " + config.targeturl + " " +  config.originalstring + " " + config.stringtoreplace);
+      }
+     });
 
-    //}, 10000);
+    }, 10000);
 
-
-/*   var proxy = httpProxy.createProxyServer({ target: config.targeturl });
-
-    updateRoutingInfowithUrl(config.configid, config.portnumber);
-
-    process.on('uncaughtException', function (err) {
+      process.on('uncaughtException', function (err) {
       
       //assign a new port if previous one is alreay in use and update routing table
       if(err.errno === "EADDRINUSE")
@@ -198,10 +160,9 @@ function buildProxyServer(config)
       
     }); 
 
+}//buildproxyserver
 
-}
 
-*/
 //generate port numbers to run proxy server on demand
 function generatePortNumber()
 {

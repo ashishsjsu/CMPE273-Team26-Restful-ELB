@@ -5,7 +5,8 @@ exports.createMongoConnection = function()
 {
 
 var mongoose = require("mongoose");
-var dbURI = "mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb";
+//var dbURI = "mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb";
+var dbURI = "mongodb://localhost:27017/proxydb"
 mongoose.connect(dbURI);
 
 // CONNECTION EVENTS
