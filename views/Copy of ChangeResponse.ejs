@@ -17,6 +17,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
     <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
     <link href="/stylesheets/bootstrap-glyphicons.css" rel="stylesheet">
     <link href="/stylesheets/styles.css" rel="stylesheet">
+     <script src="/javascripts/changeResponseScript.js"></script>
     <script src="/javascripts/modernizr-2.6.2.min.js"></script>
 </head>
 
@@ -24,18 +25,22 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"> PROXY LIST : </a>
-     <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
+       <a class="navbar-brand" href="/">    </a>
+      <p style=" text-indent: 16em;"> 
+     <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
+      
+	<a href="/simpleProxy"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
    
-    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn">   GZIP </button> </a>
+    <a href="/gzip"> <button type="button" class="btn btn-default navbar-btn">   GZIP </button> </a>
+        
+    <a href="/changeresponse"> <button type="button" class="btn btn-success"> <strong>Change-Response Proxy</strong></button> </a>
     
-    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
-    
-    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Change-Response Proxy</button> </a>
-    
-    <a href="/page2"> <button type="button" class="btn btn-default navbar-btn"> Web-Socket Proxy</button> </a>
+    <a href="/websocketproxy"> <button type="button" class="btn btn-default navbar-btn"> Web-Socket Proxy</button> </a>
     
     <a href="/loadBalancer"> <button type="button" class="btn btn-default navbar-btn"> Load Balancer</button> </a>
+
+    <a href="/httpTohttps"> <button type="button" class="btn btn-default navbar-btn"> HTTP-Secure</button> </a>
+    </p>
     </div>
   </div>
  </nav>
@@ -90,7 +95,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
             <!-- ***************************************proxy info***************************************************** -->
             <!-- /PROXY LIST-->
 
-            <div class="container" id="proxylist">
+            <div class="container" id="changeproxylist">
                 <section>
                     <h4 style="text-align: center"><strong>Proxy
                     Details</strong></h4>
@@ -98,7 +103,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                     <div class="row">
                         <!-- PROXY LIST-->
 
-                        <div id="proxyList">
+                        <div id="changeproxyList">
                             <h2>Proxy List</h2>
 
                             <table border="1" class="table table border">
@@ -108,31 +113,28 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 
                                         <th>TargetURL</th>
 
-                                        <th>Latency</th>
-
                                         <th>ProxyURL</th>
 
-                                        <th>HTTPS Enabled</th>
+                                        <th>Original String</th>
+
+                                        <th>New String</th>
 
                                         <th>Status</th>
 
                                         <th>Delete?</th>
                                     </tr>
                                 </thead>
+                                 <tbody></tbody>
 
-                                <tbody>
-                                <%for(var i=0; i<products.length; i++ )  { %>
-                                <tr><td> <%=products[i].title%>
-                                </td>
-                                </tr>
-                                <% } %>
-                                </tbody>
                             </table>
                         </div><!-- /PROXY LIST-->
                     </div>
                 </section>
             </div><!--row ended -->
-            <!-- container ended -->
+          <!-- container ended -->
+        <p style=" text-indent: 76em;">  <button type="button" class="btn btn-default navbar-btn" id ="updtbtn"> Update Table </button>
+           </div> 
+           </div>
             <!-- **********************proxy details module******************************** -->
 
             <div class="col" id="main2">
@@ -142,22 +144,21 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                             <h4 class="modal-title"><strong>ADD A SIMPLE
                             PROXY</strong></h4>
                         </div><!-- ending of model header-->
-						<form action="/ChangeProxy" method="post">
-                        <div id="addProxy">
+                        <div id="addChangeProxy">
                             <fieldset>
                                 <table>
                                     <tr>
                                         <td>Target URL:</td>
 
-                                        <td><input id="inputProxyTargetURL"
+                                        <td><input id="inputChProxyTargetURL"
                                         placeholder="Target URL" name="inputProxyTargetURL" type=
                                         "text"></td>
                                     </tr>
 
-                                      <tr>
+                                    <tr>
                                         <td>Original String:</td>
 
-                                        <td><input id="inputStringtoreplace"
+                                        <td><input id="inputOriginal"
                                         placeholder="String to replace" name="inputStringtoreplace" type="text"></td>
                                     </tr>
 
@@ -168,27 +169,21 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         placeholder="New string" name="inputReplacement" type="text"></td>
                                     </tr>
 
-                                    <tr>
-                                        <td>Https Enabled:</td>
-
-                                        <td><input name="httpsCheck" type=
-                                        "checkbox" value="https"></td>
-                                    </tr>
+                                    
                                 </table><br>
                             </fieldset>
                         </div>
 
                         <div class="modal-footer">
-                         
-                            <input type="submit" value="SAVE PROXY" id="btnAddChangeResponseProxy">
+                            <button class="btn btn-primary" id="btnAddChangeResponseProxy" type="button">SAVE PROXY</button>
                         </div><!-- end of model footer -->
-                        </form>
                     </div><!-- model dialog ends -->
                 </div><!-- model fade ends -->
+  
             </div><!-- ending column 2 cointainer -->
 
             <div class="col" id="main5"></div><!-- endding container-->
-        </div><!-- ending row -->
+        
         
         <div class="container">
             <div class="line" id="line">
@@ -198,7 +193,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
         </div><!-- class container ends here -->
 
         <div class="container">
-            <div class="col" id="col3">
+           <!--   <div class="col" id="col3">
                 <div class="modal-footer"></div>
             </div><!-- column 1 of container ends here -->
 
@@ -233,7 +228,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         "updateProxyTargetURL" placeholder=
                                         "Target URL" type="text"></td>
                                     </tr>
-
+                              <!--  Removing Latency .. 
                                     <tr>
                                         <td>Latency:</td>
 
@@ -241,6 +236,25 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         "updateProxyLatency" placeholder=
                                         "Latency" type="text"></td>
                                     </tr>
+                                                                        -->
+                                                                        
+                 
+                                    <tr>
+                                        <td>Original String:</td>
+
+                                        <td><input class="textBox" id=
+                                        "updateOriginalString" placeholder=
+                                        "OriginalString" type="text"></td>
+                                    </tr>  
+                                    <tr>
+                                        <td>New String:</td>
+
+                                        <td><input class="textBox" id=
+                                        "updateNewString" placeholder=
+                                        "NewString" type="text"></td>
+                                    </tr>                                    
+                                     
+                                                                        
                                 </table>
                             </fieldset>
                         </div>
@@ -258,7 +272,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
             </div><!-- model fade -->
         </div><!-- col4 ends here-->
     </div><!-- row ends here  --><!-- container ends here -->
-
+</div><!-- ending row -->
     <div class="container">
         <div class="line" id="line">
             <p>
@@ -272,7 +286,6 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
      <script src="/javascripts/bootstrap.min.js"></script> <!-- Custom JS -->
      <script src="/javascripts/script.js"></script> <script src="/javascripts/bootstrap.js"></script> <script src=
 "http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
- <!--    <script src="/javascripts/global.js"></script> -->
-         <script src="/javascript/globalResponseProxy.js"></script>
+    <script src="/javascripts/changeResponseScript.js"></script>
 </body>
 </html>
