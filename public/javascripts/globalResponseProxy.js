@@ -16,6 +16,9 @@ $(document).ready(function() {
     
 
     $('#btnAddChangeResponseProxy').on('click', addChangeResponseProxy)
+    // update proxy button click
+     
+    $('#btnUpdateResponse').on('click', updateResponseProxy);
 
 });
 
@@ -141,6 +144,72 @@ function addChangeResponseProxy()
     }
         
 }
+
+
+//update proxy configurations
+function updateProxy(event) {
+    event.preventDefault();
+
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+    $('#updateProxy input').each(function(index, val) {
+        if($(this).val() === '') { errorCount++; }
+    });
+
+    // Check and make sure errorCount's still at zero
+    if(errorCount === 0) {
+
+        var purl = $('#updateProxy fieldset input#updateProxyTargetURL').val();
+        alert("Updating to "+ purl);
+
+        // If it is, compile all proxy info into one object
+        var id = $('#proxyID').text()
+        var newProxy = {
+
+            'configid': id,
+           // 'proxyurl': $('#updateProxy fieldset input#updateProxyURL').val(),
+            'proxyurl': $('#updateProxy fieldset label#updateProxyURL').text(),
+            'targeturl': $('#updateProxy fieldset input#updateProxyTargetURL').val(),
+            'latency': $('#updateProxy fieldset input#updateProxyLatency').val()
+        }
+
+       
+        $.ajax({
+            type: 'PUT',
+            data: newProxy,
+            url: '/api/simpleproxy/'+id, // + $('#proxyID').text(),
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+
+                // Clear the form inputs
+                $('#updateProxy fieldset input').val('');
+                $('#updateProxy fieldset label#updateProxyURL').text('');
+                $('#updateProxy fieldset input#updateProxyTargetURL').val('');
+                $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset span#proxyID').text('');
+
+                // Update the table
+                populateTable();
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+    }
+    else {
+        // If errorCount is more than 0, error out
+        alert('Please fill in all fields');
+        return false;
+    }
+};
+
 
 
 

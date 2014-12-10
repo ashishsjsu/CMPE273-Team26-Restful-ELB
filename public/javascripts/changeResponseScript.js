@@ -15,6 +15,12 @@ console.log ("inside the Response Proxy");
     $('#changeproxyList table tbody').on('click', 'td a.linkdeleteproxy', deleteChangeResProxy);
     $('#btnAddChangeResponseProxy').on('click', addChangeResponseProxy)
     $('#btnStartProxy').on('click', startChangeResProxyServer);
+  //stop proxy server 
+    $('#btnStopProxy').on('click', stopResponseProxyServer);
+  //Refresh button for updating the latest entry.
+   
+    $('#btnUpdateProxy').on('click', updateProxy);
+
     
 
 
@@ -91,8 +97,9 @@ function showProxyInfo(event) {
     $('#proxyID').text(thisProxyObject.configid);
     $('#updateProxy fieldset label#updateProxyURL').text(thisProxyObject.proxyurl);
     $('#updateProxy fieldset input#updateProxyTargetURL').val(thisProxyObject.targeturl);
-    $('#updateProxy fieldset input#updateProxyLatency').val(thisProxyObject.latency);
-    
+    $('#updateProxy fieldset input#updateOriginalString').val(thisProxyObject.originalresponse);
+    $('#updateProxy fieldset input#updateNewString').val(thisProxyObject.modifiedresponse);
+
 };
 
 
@@ -129,9 +136,14 @@ function addChangeResponseProxy()
             if (response.msg === '') {
                 // Clear the form inputs
                 $('#addChangeProxy input').val('');
-
-                // Update the table
-              // populateTable();
+             // Clear the form inputs
+                $('#addChangeProxy fieldset input#inputChProxyTargetURL').val('');
+                $('#addChangeProxy fieldset input#inputStringtoreplace').text('');
+                $('#addChangeProxy fieldset input#inputReplacement').val('');
+                
+                
+                populateChangeResponseTable();
+                
             }
             else {
 
@@ -168,7 +180,7 @@ function deleteChangeResProxy(event) {
         $.ajax({
                  type : 'DELETE',
                  data: '',
-                 url : 'http://localhost:8006/proxyserver/reverseproxy/'+$(this).attr('rel'),
+                 url : 'http://localhost:8006/proxyserver/ChangeResponse/'+$(this).attr('rel'),
                  dataType : 'JSON'
 
         }).done(function(response){
@@ -274,6 +286,122 @@ function startChangeResProxyServer(event){
     }
 	}
 };
+
+function stopResponseProxyServer(){
+
+	console.log("Entered in to stop proxt : response");
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+    
+    
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+    	errorCount++;
+    }
+
+    var configid = $('#updateProxy fieldset span#proxyID').text();
+    
+    console.log(configid);
+    
+console.log("errorCount:" + errorCount)
+    if(errorCount == 0)
+    {
+    	console.log("Entered in to stop proxt : response")
+        $.ajax({
+                 type : 'DELETE',
+                 data: '',
+                 url : 'http://localhost:8006/proxyserver/ChangeResponse/'+configid,
+                 dataType : 'JSON'
+
+        }).done(function(response){
+             // Clear the form inputs
+                $('#updateProxy fieldset input').val('');
+                $('#updateProxy fieldset label#updateProxyURL').text('');
+                $('#updateProxy fieldset input#updateProxyTargetURL').val('');
+                $('#updateProxy fieldset input#updateProxyLatency').val('');
+                $('#updateProxy fieldset span#proxyID').text('');
+
+                populateChangeResponseTable();
+
+        });    
+
+    }
+    else{
+        alert("Please select a proxy to stop");
+    }
+};
+
+
+function updateProxy(event) {
+    event.preventDefault();
+
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
+
+    // Check and make sure errorCount's still at zero
+    if(errorCount === 0) {
+
+        var purl = $('#updateProxy fieldset input#updateProxyTargetURL').val();
+        alert("Updating to "+ purl);
+
+        // If it is, compile all proxy info into one object
+        var id = $('#proxyID').text()
+        var newProxy = {
+
+            'configid': id,
+           // 'proxyurl': $('#updateProxy fieldset input#updateProxyURL').val(),
+            'proxyurl':  $('#addChangeProxy fieldset label#updateProxyURL').text(),
+            'targeturl': $('#addChangeProxy fieldset input#updateProxyTargetURL').val(),
+            'originalstring':  $('#addChangeProxy fieldset input#updateOriginalString').val(),
+            'replacementstring': $('#addChangeProxy fieldset input#updateNewString').val(),
+            'latency' : 0        
+            }
+
+       
+        $.ajax({
+            type: 'PUT',
+            data: newProxy,
+            url: '/api/simpleproxy/'+ $('#proxyID').text(),
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+
+            	// Update the table
+                populateChangeResponseTable();
+            	
+                // Clear the form inputs
+                $('##addChangeProxy fieldset label').val('');
+                $('##addChangeProxy fieldset input#updateProxyURL').text('');
+                $('#addChangeProxy fieldset input#updateProxyTargetURL').val('');
+                $('#addChangeProxy fieldset input#inputOriginal').val('');
+                $('##addChangeProxy fieldset fieldset span#inputReplacement').text('');
+
+                
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+    }
+    else {
+        // If errorCount is more than 0, error out
+        alert('Please fill in all fields');
+        return false;
+    }
+};
+
+
 
 
 

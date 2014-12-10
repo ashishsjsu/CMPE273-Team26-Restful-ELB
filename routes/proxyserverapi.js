@@ -225,6 +225,7 @@ function buildProxyServer(config)
 	//add proxyurl in routing table
 	updateRoutingInfowithUrl(config.configid, config.portnumber);
 
+	console.log("Reverse : " + reverseproxyserver);
 	//store server instance in map to keep track of servers launched
 	map[config.configid] = reverseproxyserver;
 

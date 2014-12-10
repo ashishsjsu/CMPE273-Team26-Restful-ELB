@@ -90,7 +90,7 @@ exports.updateProxyConfiguration = function(req, res){
 
 	var query = {"ClientId" : "1"};
 
-	var update = { $push : { Simpleproxy : { configid: req.params.configid, targeturl : req.body.targeturl, proxyurl: req.body.proxyurl, latency : req.body.latency, https : req.body.https, status: false }}};
+	var update = { $push : { Simpleproxy : { configid: req.params.configid, targeturl : req.body.targeturl, proxyurl: req.body.proxyurl, latency : req.body.latency, https : req.body.https, status: false, originalresponse: req.body.originalstring, modifiedresponse: req.body.replacementstring }}};
 
 		ProxyConfig.findOneAndUpdate(query, update, function(err, data){
 
@@ -100,7 +100,7 @@ exports.updateProxyConfiguration = function(req, res){
 	})
 
 	//update routing table as well
-	updateSimpleproxyRoutingInfo(req.params.configid,  req.body.targeturl, req.body.latency, req.body.https);
+	updateSimpleproxyRoutingInfo(req.params.configid,  req.body.targeturl, req.body.latency, req.body.https, req.body.originalstring, req.body.replacementstring);
 
 }//updateProxyConfiguration
 
@@ -155,11 +155,11 @@ function insertSimpleproxyRoutingInfo(count, targeturl, latency, https, original
 }
 
 //update configuration in routing table
-function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https){
+function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https, originalstring, replacementstring){
 
 	var query  = { "configid" : configid };
 
-	var update = { $set : { "targeturl" : targeturl, "latency" : latency, "https" : https } };
+	var update = { $set : { "targeturl" : targeturl, "latency" : latency, "https" : https, "originalresponse" : originalstring, "modifiedresponse" : replacementstring} };
 
 	RoutingInfo.update(query, update, function(err, num){
 		if(err)

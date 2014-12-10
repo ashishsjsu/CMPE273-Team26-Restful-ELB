@@ -25,21 +25,22 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
-       <a class="navbar-brand" href="/">  PROXY LIST :     </a>
-      <!-- <p style=" text-indent: 16em;"> -->
+       <a class="navbar-brand" href="/">    </a>
+      <p style=" text-indent: 16em;"> 
      <a href="/"> <button type="button" class="btn btn-default navbar-btn"> Reverse-Proxy </button> </a>
       
 	<a href="/simpleProxy"> <button type="button" class="btn btn-default navbar-btn"> Simple-Proxy </button> </a>
    
     <a href="/gzip"> <button type="button" class="btn btn-default navbar-btn">   GZIP </button> </a>
-    
-   	 <a href="/changeresponse"> <button type="button" class="btn btn-default navbar-btn"> Change-Response Proxy </button> </a>
+        
+    <a href="/changeresponse"> <button type="button" class="btn btn-success"> <strong>Change-Response Proxy</strong></button> </a>
     
     <a href="/websocketproxy"> <button type="button" class="btn btn-default navbar-btn"> Web-Socket Proxy</button> </a>
     
     <a href="/loadBalancer"> <button type="button" class="btn btn-default navbar-btn"> Load Balancer</button> </a>
-        
+
     <a href="/httpTohttps"> <button type="button" class="btn btn-default navbar-btn"> HTTP-Secure</button> </a>
+    </p>
     </div>
   </div>
  </nav>
@@ -130,7 +131,8 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                     </div>
                 </section>
             </div><!--row ended -->
-            <!-- container ended -->
+          <!-- container ended -->
+        <p style=" text-indent: 76em;">  <button type="button" class="btn btn-default navbar-btn" id ="updtbtn"> Update Table </button>
             <!-- **********************proxy details module******************************** -->
 
             <div class="col" id="main2">
@@ -154,7 +156,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                     <tr>
                                         <td>Original String:</td>
 
-                                        <td><input id="inputStringtoreplace"
+                                        <td><input id="inputOriginal"
                                         placeholder="String to replace" name="inputStringtoreplace" type="text"></td>
                                     </tr>
 
@@ -223,7 +225,7 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         "updateProxyTargetURL" placeholder=
                                         "Target URL" type="text"></td>
                                     </tr>
-
+                              <!--  Removing Latency .. 
                                     <tr>
                                         <td>Latency:</td>
 
@@ -231,6 +233,25 @@ window.jQuery || document.write('<script src="/javascripts/jquery-1.8.2.min.js">
                                         "updateProxyLatency" placeholder=
                                         "Latency" type="text"></td>
                                     </tr>
+                                                                        -->
+                                                                        
+                 
+                                    <tr>
+                                        <td>Original String:</td>
+
+                                        <td><input class="textBox" id=
+                                        "updateOriginalString" placeholder=
+                                        "OriginalString" type="text"></td>
+                                    </tr>  
+                                    <tr>
+                                        <td>New String:</td>
+
+                                        <td><input class="textBox" id=
+                                        "updateNewString" placeholder=
+                                        "NewString" type="text"></td>
+                                    </tr>                                    
+                                     
+                                                                        
                                 </table>
                             </fieldset>
                         </div>
