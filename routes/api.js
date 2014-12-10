@@ -38,18 +38,14 @@ exports.addProxyConfiguration = function(req, res){
 			if(proxydb.Simpleproxy != undefined)
 			{	
 				count1='0'
-				console.log("In simple proxy array")
 				proxydb.Simpleproxy.forEach(function(item){
 				count1=item.configid;
-				console.log("string count" + count1)
-				//console.log("Item" + item)
 				//if(item===null)
 					//{count1='0'}
 				})
 			}
 			count=parseInt(count1);
 			count++;
-			console.log("count" + count)
 
 			proxydb.Simpleproxy.push({configid: count, targeturl: req.body.targeturl, proxyurl : '', latency: req.body.latency, https: req.body.https, original: req.body.stringtomatch, replacement: req.body.stringtoreplace});
 
@@ -71,7 +67,6 @@ exports.addProxyConfiguration = function(req, res){
 //Simpleproxy GET
 //retrieve all proxy configurations for simpleproxy
 exports.getProxyConfiguration = function(req, res){
-		console.log("in getprocy config")
 		//retrieve configuration from routing table
 		RoutingInfo.find({}, function(err, docs){
 			if(err)
@@ -95,7 +90,7 @@ exports.updateProxyConfiguration = function(req, res){
 
 	var query = {"ClientId" : "1"};
 
-	var update = { $push : { Simpleproxy : { configid: req.params.configid, targeturl : req.body.targeturl, proxyurl: req.body.proxyurl, latency : req.body.latency, https : req.body.https, status: false }}};
+	var update = { $push : { Simpleproxy : { configid: req.params.configid, targeturl : req.body.targeturl, proxyurl: req.body.proxyurl, latency : req.body.latency, https : req.body.https, status: false, originalresponse: req.body.originalstring, modifiedresponse: req.body.replacementstring }}};
 
 		ProxyConfig.findOneAndUpdate(query, update, function(err, data){
 
@@ -105,7 +100,7 @@ exports.updateProxyConfiguration = function(req, res){
 	})
 
 	//update routing table as well
-	updateSimpleproxyRoutingInfo(req.params.configid,  req.body.targeturl, req.body.latency, req.body.https);
+	updateSimpleproxyRoutingInfo(req.params.configid,  req.body.targeturl, req.body.latency, req.body.https, req.body.originalstring, req.body.replacementstring);
 
 }//updateProxyConfiguration
 
@@ -156,16 +151,15 @@ function insertSimpleproxyRoutingInfo(count, targeturl, latency, https, original
 			if(err)
 				throw err;
 	
-			console.log("routing info added : " + routingdb);
 		});
 }
 
 //update configuration in routing table
-function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https){
+function updateSimpleproxyRoutingInfo(configid, targeturl, latency, https, originalstring, replacementstring){
 
 	var query  = { "configid" : configid };
 
-	var update = { $set : { "targeturl" : targeturl, "latency" : latency, "https" : https } };
+	var update = { $set : { "targeturl" : targeturl, "latency" : latency, "https" : https, "originalresponse" : originalstring, "modifiedresponse" : replacementstring} };
 
 	RoutingInfo.update(query, update, function(err, num){
 		if(err)
@@ -218,7 +212,6 @@ function insertLoadBalRoutingInfo(configid, targetinstances)
 	loadbalroutingdb.save(function(err){
 		if(err)
 			throw err;
-		console.log("Load Balancer config added " + loadbalroutingdb);
 	});
 
 }

@@ -38,6 +38,9 @@ exports.createChangeResponseProxy=function(req,res) {
   var portnumber = generatePortNumber();
   //create a configuration object
   var config = new configuration();
+ // var app = connect();
+ // var  proxy = 'http://localhost:9013'
+	  
   config.portnumber = portnumber;
   config.configid = req.body.configid;
   console.log(config);
@@ -69,14 +72,17 @@ exports.stopChangeResponseProxy = function(req, res){
 
   var server = proxymap[req.params.configid];
   if(server === undefined) {
-    console.log("Server not running");
+
+    res.json({msg : "Server not running"});
+
   } else {
     server.close(); 
     delete proxymap[req.params.configid];
+    res.json({msg : "Proxy Stopped"});
+  
   }
   
-  res.json({msg : "Proxy Stopped"});
-
+  
   RoutingInfo.update({'configid' : req.params.configid}, { $set : {'status' : false, 'proxyurl' : null} }, function(err, data){
     if(err)
       throw err;
@@ -89,62 +95,90 @@ exports.stopChangeResponseProxy = function(req, res){
 function buildProxyServer(config)
 {
   console.log("Building ProxyServer to alter response with: " + config);
+  var app = connect();
+  var proxy = httpProxy.createProxyServer({target: config.targeturl});
+  
+  app.use(
+		  
+		  function(req, res, next) {
+			  if(req.method === 'GET'){
+				  var _write = res.write;
+				  res.write = function(data) {
+					  
+					  _write.call(res,data.toString().replace(config.originalstring, config.stringtoreplace));
+				  }
+				  proxy.web(req,res);
+		         }
+});
+		  var port = generatePortNumber();
+		  var connectserver = http.createServer(app).listen(config.portnumber);
+		  proxymap[config.configid] = connectserver;
+		  console.log(connectserver);
+		  updateRoutingInfowithUrl(config.configid, config.portnumber);
+		 }
 
-  connectserver = connect.createServer( function (req, res, next) {
+/////////////////////////////////////  
+  //var connectserver = connect.createServer( function (req, res, next) {
     
-    var _write = res.write;
+  //   var _write = res.write;
 
     //disable favicon
-    if(req.url === '/favicon.ico')
-    {
-      console.log("favicon disabled");
-      res.end();
-      return;
-    }
+   // if(req.url === '/favicon.ico')
+   // {
+   //   console.log("favicon disabled");
+   //   res.end();
+   //   return;
+   // }
 
-    res.write = function (data) {
+   // res.write = function (data) {
 
-      console.log("data is: " + data);
-      _write.call(res, data.toString().replace(config.originalstring, config.stringtoreplace));
+     // console.log("data is: " + data);
+     // _write.call(res, data.toString().replace(config.originalstring, config.stringtoreplace));
 
-    }
-    next();
-  },
-  function (req, res) {
-    proxy.web(req, res);
-  }
+   // }
+   // next();
+ // },
+ // function (req, res) {
+  //  proxy.web(req, res);
+ // }
   
-)
-    connectserver.listen(config.portnumber);
+//)
+  //  connectserver.listen(config.portnumber);
 
-    proxymap[config.configid] = connectserver;
+   // proxymap[config.configid] = connectserver;
+    
+ //   console.log("Connectserver : " + connectserver);
 
     //poll the database at defined interval
-    var polldb = setInterval(function(){
+   // var polldb = setInterval(function(){
 
-      RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
-        if(err)
-          res.send(err)
+     // RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
+      //  if(err)
+        //  res.send(err)
 
-        if(!Boolean(routingdb.status))  // check the status of proxy-server, if not running dnt get data
-        {
-          flag = false;
-          console.log("Stopping the db Polling");
-          clearInterval(polldb);
-        }
-        else
-        {
-          config.targeturl = routingdb.targeturl;
-          config.originalstring = routingdb.originalresponse;
-          config.modifiedresponse = routingdb.modifiedresponse;
+       // if(routingdb === null)
+        //{
+         // clearInterval(poll);
+        //}
+       // if(!Boolean(routingdb.status))  // check the status of proxy-server, if not running dnt get data
+       // {
+         // flag = false;
+         // console.log("Stopping the db Polling");
+          //clearInterval(polldb);
+        //}
+        //else
+       // {
+        //  config.targeturl = routingdb.targeturl;
+         // config.originalstring = routingdb.originalresponse;
+         // config.modifiedresponse = routingdb.modifiedresponse;
          // console.log("Polling the db " + config.targeturl);
-        }
-      });
+       // }
+      //});
 
-    }, 10000);
+    //}, 10000);
 
 
-    var proxy = httpProxy.createProxyServer({ target: config.targeturl });
+/*   var proxy = httpProxy.createProxyServer({ target: config.targeturl });
 
     updateRoutingInfowithUrl(config.configid, config.portnumber);
 
@@ -167,7 +201,7 @@ function buildProxyServer(config)
 
 }
 
-
+*/
 //generate port numbers to run proxy server on demand
 function generatePortNumber()
 {

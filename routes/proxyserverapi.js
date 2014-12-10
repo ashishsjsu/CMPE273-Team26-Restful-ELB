@@ -35,7 +35,6 @@ exports.createReverseProxyServer = function(req, res){
 	var config = new configuration();
 	config.portnumber = portnumber;
 	config.configid = req.body.configid;
-	console.log(config);
 
  	RoutingInfo.findOne({"configid" : config.configid}, function(err, routingdb){
 		if(err)
@@ -45,8 +44,6 @@ exports.createReverseProxyServer = function(req, res){
 		config.targeturl = routingdb.targeturl;
 		config.latency 	 = routingdb.latency;
 		config.https 	 = routingdb.https;
-
-		console.log(config);
 
 		res.json({msg : "Proxyserver running on " + "localhost:" + config.portnumber, port: "localhost" + config.portnumber });
 
@@ -76,13 +73,15 @@ exports.stopReverseProxyServer = function(req, res){
 
 	var server = map[req.params.configid];
 	if(server === undefined) {
-		console.log("Server not running");
+		res.json({msg : "Server not running"});
+
 	} else {
 		server.close();	
 		delete map[req.params.configid];
+		res.json({msg : "Proxy Stopped"});
+
 	}
 	
-	res.json({msg : "Proxy Stopped"});
 
 	RoutingInfo.update({'configid' : req.params.configid}, { $set : {'status' : false, 'proxyurl' : null} }, function(err, data){
 		if(err)
@@ -110,7 +109,6 @@ exports.addRoutingInfo = function(req, res){
 			res.send(err);
 
 		res.json({ message : "routing info added"});	
-		console.log(routingdb);
 
 	})
 }
@@ -134,7 +132,6 @@ var proxy = httpProxy.createProxy();
 
 function buildProxyServer(config)
 {
-		console.log("configuration  " + config);
 
 		var config = config;
 		var flag = true;
@@ -150,7 +147,6 @@ function buildProxyServer(config)
 		//disable favicon
 		if(req.url === '/favicon.ico')
 		{
-			console.log("favicon disabled");
 			res.end();
 			return;
 		}
@@ -181,13 +177,11 @@ function buildProxyServer(config)
 		{
 			setTimeout(function()
 			{
-				//console.log('forwarding request with latency: ', target.target + "latency: " + configuration.latency);
 				proxy.web(req, res, options);
 			}, config.latency);
 		}
 		else
 		{
-    	 	//console.log('forwarding request to: ', target.target);
 			proxy.web(req, res, options);	
 		}
 
@@ -195,9 +189,7 @@ function buildProxyServer(config)
 		proxy.on('proxyRes', function (proxyRes, req, res) {
 
   			res.setHeader("X-HTTP-Processing-Time", (new Date()).getMilliseconds() - start);
-  			res.setHeader("X-HTTP-request-id", requestid);
-			console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
-  			
+  			res.setHeader("X-HTTP-request-id", requestid);  			
 			//res.end("Raw response from target: \n" + JSON.stringify(proxyRes.headers, true, 2) + "\n" + JSON.stringify(res.headers, true, 2));
 		});
 
@@ -219,7 +211,6 @@ function buildProxyServer(config)
     	if(err.errno === "EADDRINUSE")
     	{
     		var port =  generatePortNumber();
-    		console.log(port);
     		config.portnumber = port;
     		reverseproxyserver.listen(port);
     		updateRoutingInfowithUrl(config.configid, port);
@@ -234,6 +225,7 @@ function buildProxyServer(config)
 	//add proxyurl in routing table
 	updateRoutingInfowithUrl(config.configid, config.portnumber);
 
+	console.log("Reverse : " + reverseproxyserver);
 	//store server instance in map to keep track of servers launched
 	map[config.configid] = reverseproxyserver;
 
@@ -244,17 +236,19 @@ function buildProxyServer(config)
 				if(err)
 					res.send(err)
 
+				if(routingdb === null)
+				{
+					clearInterval(poll);
+				}
 				if(!Boolean(routingdb.status))	// check the status of proxy-server, if not running dnt get data
 				{
 					flag = false;
-					console.log("Stopping the db Polling");
 					clearInterval(poll);
 				}
 				else
 				{
 					config.targeturl = routingdb.targeturl;
 					config.latency = routingdb.latency;
-					console.log("Polling the db " + config.targeturl);
 				}
 			});
 

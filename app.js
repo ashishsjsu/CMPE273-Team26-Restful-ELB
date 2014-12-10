@@ -8,6 +8,7 @@ var express = require('express'),
 	ejs = require('ejs'),
 	api = require('./routes/api');
 	forwardapi = require('./routes/forwardapi');
+	HTTP = require('./routes/httpTohttps'),
 	path = require('path');
 	gzip = require('./routes/gzip')
 	
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs');
 app.get('/simpleProxy', test.getSimpleProxyPage);
 app.get('/page2', test.getOnPage);
 app.get('/loadBalancer', test.getLoadBalancerPage);
-app.get('/http', test.getHttpToHttpsPage);
+app.get('/httpTohttps', test.getHttpToHttpsPage);
 //app.get('/changeresponse', test.getChangeResponsePage)
 app.get('/gzip', test.getGzip);
 
@@ -40,7 +41,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
-	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
@@ -56,7 +56,6 @@ var router = express.Router();
  //middleware to use all requests
  //use this to do operations meant to be processed before request hits a route
 router.use(function(req, res, next){
-	console.log("Something is happening...");
 	next();
 });
 
@@ -102,6 +101,21 @@ router.route('/forwardproxy/:configid')
 
 	//delete proxy configuration
 	.delete(forwardapi.deleteProxyConfiguration);
+
+//routes for HttpToHttps api here
+router.route("/secure")
+	//post configuration parameters
+	.post(HTTP.addProxyConfiguration)
+	//get configuration parameters
+	.get(HTTP.getProxyConfiguration);
+
+router.route('/secure/:configid')
+
+	//update configuration parameters
+	.put(HTTP.updateProxyConfiguration)
+
+	//delete proxy configuration
+	.delete(HTTP.deleteProxyConfiguration);
 
 //routes for change response proxy configuration
 router.route('/simpleproxy/changeresponse')

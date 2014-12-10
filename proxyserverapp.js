@@ -10,7 +10,7 @@ var arguments = process.argv.splice(2);
      loadbalancerapi = require('./routes/loadbalancerapi'),
      ChangeResponse = require("./routes/ChangeResponse"),
  	 gzip = require('./routes/gzip'),
- 	HTTP = require('./routes/httpTohttps'),
+ 	HTTP = require('./routes/httpTohttpsProxyBackendapi'),
  	websockproxy = require('./routes/Websocketproxyapi');
  
 //get mongodb connection instance
@@ -28,7 +28,6 @@ app.use(bodyParser.json());
 //configure app for cross-origin requests
 app.all('*', function(req, res, next){
 
-	console.log("In app all");
 	if (!req.get('Origin')) return next();
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
@@ -42,7 +41,6 @@ app.use('/proxyserver', router);
 
 //app middleware
 router.use(function(req, res, next){
-	console.log("Proxyserver middleware...");
 	next();
 });
 
@@ -100,10 +98,17 @@ router.route("/ChangeResponse/:configid")
 .delete(ChangeResponse.stopChangeResponseProxy);
 
 
-//routes for loadbalacer api here
-router.route("/secure")
+//routes for HttpToHttps api here
+router.route("/httpsProxy")
 
-	.get(HTTP.forwardRequestSecure);
+	.post(HTTP.createHttpsProxyServer);
+
+	//.get(HTTP.forwardRequestSecure);
+
+router.route("/httpsProxy/:configid")
+
+	.delete(HTTP.stopForwardProxyServer);
+
 
 router.route('/websocketproxy')
 	

@@ -59,7 +59,12 @@ function populateTable() {
        proxyListData = data;
 
         // For each item in our JSON, add a table row and cells to the content string
-        $.each(proxyListData, function(){
+        $.each(proxyListData, function(){   
+
+            var https;
+
+            if(!Boolean(this.https)){ https = false; }
+            else { https = true; }
 
             tableContent += '<tr>';
             tableContent += '<td><a href="#" class="linkshowproxy" rel="' + this.configid + '" title="Show Details">' + this.configid + '</a></td>';
@@ -67,7 +72,7 @@ function populateTable() {
             tableContent += '<td>' + this.targeturl + '</td>';
             tableContent += '<td>' + this.latency + '</td>';
             tableContent += '<td>' + this.proxyurl + '</td>';
-            tableContent += '<td>' + this.https + '</td>';
+            tableContent += '<td>' + https + '</td>';
 
             if(Boolean(this.status))
             {
@@ -108,6 +113,61 @@ function showProxyInfo(event) {
     $('#updateProxy fieldset input#updateProxyTargetURL').val(thisProxyObject.targeturl);
     $('#updateProxy fieldset input#updateProxyLatency').val(thisProxyObject.latency);
     
+};
+
+function addHttpsProxy(event) {
+    event.preventDefault();
+
+//    user =  $('#txtUser').val();
+
+    // Super basic validation - increase errorCount variable if any fields are blank
+    var errorCount = 0;
+    
+    if($.trim($('#addProxy fieldset input#inputProxyTargetURL').val()).length < 1) { errorCount++; }
+    
+
+    // Check and make sure errorCount's still at zero
+    if(errorCount === 0) {
+
+        // If it is, compile all proxy info into one object
+        var newProxy = {
+          
+            'targeturl': $('#addHttpsProxy fieldset input#inputHttpsProxyTargetURL').val(),
+            'latency': $('#addHttpsProxy fieldset input#inputHttpsLatency').val(),
+            'httpsFlag': $('#addHttpsProxy fieldset input#inputHttpsFlag').val()
+
+        }
+
+        // Use AJAX to post the object to our adduser service
+        $.ajax({
+            type: 'POST',
+            data: newProxy,
+            url: '/proxyserver/secure',
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+                // Clear the form inputs
+                $('#addHttpsProxy fieldset input').val('');
+
+                // Update the table
+                populateTable();
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+    }
+    else {
+        // If errorCount is more than 0, error out
+        alert('Please fill in all the fields');
+        return false;
+    }
 };
 
 function addProxy(event) {
@@ -172,9 +232,11 @@ function updateProxy(event) {
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     // Check and make sure errorCount's still at zero
     if(errorCount === 0) {
@@ -307,9 +369,12 @@ function stopProxyServer(){
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     var configid = $('#updateProxy fieldset span#proxyID').text();
 
@@ -342,9 +407,12 @@ function stopProxyServer(){
 function startProxyServer(){
 
     var errorCount = 0;
-    $('#updateProxy input').each(function(index, val) {
-        if($(this).val() === '') { errorCount++; }
-    });
+  
+
+    if($('#updateProxy fieldset span#proxyID').text() === '')
+    {
+        errorCount++;
+    }
 
     if(errorCount == 0)
     {
