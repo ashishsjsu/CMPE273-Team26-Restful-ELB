@@ -19,7 +19,7 @@ $(document).ready(function() {
    
     $('#btnUpdateProxy').on('click', updateProxy);
 
-    $('#updtbtn').on('click', populateChangeResponseTable)
+    $('#updtbtn').on('click', refreshData)
 
 
 });
@@ -29,6 +29,20 @@ $(document).ready(function() {
 // Functions =============================================================
 
 
+function refreshData() {
+
+$('#addChangeProxy fieldset input#inputChProxyTargetURL').val('');
+    $('#addChangeProxy fieldset input#inputOriginal').val('');
+    $('#addChangeProxy fieldset input#inputReplacement').val('');  
+    
+$('#updateProxy fieldset input').val('');
+     $('#updateProxy fieldset label#updateProxyURL').text('');
+     $('#updateProxy fieldset input#updateProxyTargetURL').val('');
+     $('#updateProxy fieldset input#updateProxyLatency').val('');
+     $('#updateProxy fieldset span#proxyID').text('');
+     populateChangeResponseTable();
+
+};
 
 
 function populateChangeResponseTable() {
