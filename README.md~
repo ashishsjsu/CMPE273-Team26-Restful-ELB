@@ -12,7 +12,6 @@ Feature list:
 8) Web-socket proxy
 9) Generating unique request id for each request
 10) Compute processing time for each request
-11) Cache ProxyServer
 
 Configurations for all features can be updated on demand without restarting proxy server. 
 
