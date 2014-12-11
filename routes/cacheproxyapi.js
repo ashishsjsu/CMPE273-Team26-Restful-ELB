@@ -31,14 +31,18 @@ exports.startcaching=function(req,res){
     
     var config = new ServerDetails();
     var port=generatePortNumber()
-    config.configid=req.body.configid
-    CacheConfig.findOne({"configid" : config.configid}, function(err, cachcedb){
+    config.configid=4
+
+    CacheConfig.findOne({"configid" : config.configid}, function(err, cachedb){
 		if(err)
 			res.send(err);
 
 		//get configuration from db
 		config.targeturl = cachedb.targeturl;
+		config.portnumber=port;
+		console.log(config.targeturl)
 		config.latency 	 = cachedb.latency;
+		console.log(config.latency)
 		//config.https 	 = routingdb.https;
 
 		console.log(config);
@@ -142,7 +146,7 @@ serverObject[config.configid]= http.createServer(function (req, res) {
   //res.end("just once")
 })
 
-server.listen(config.port);
+serverObject[config.configid].listen(config.portnumber);
 }
 
 

@@ -11,21 +11,20 @@ exports.addproxyconfig = function(req, res){
 
 
            var cachedb= new CacheConfig();
-           var count = 0;		
-			
-		   if(cachedb!= undefined)
+           var count_doc = 0;		
+		   console.log(cachedb)
+           if(cachedb != undefined)
 			{
-				cachedb.forEach(function(item){
-					count++;
-				})
-			}
-
-			count++;
-             cachedb.condigid=count;
-             cachedb.targeturl=req.body.targeturl
+				CacheConfig.count(function(err,count){
+					console.log(count)
+					count_doc=count
+					count_doc++;
+			      //console.log(count)
+                 cachedb.configid=count_doc.toString();
+                  cachedb.targeturl=req.body.targeturl
              cachedb.latency=req.body.latency
 
-
+            //console.log(cachedb.targeturl)
 				cachedb.save(function(err, data){
 				if(err) 
 					res.send(err);
@@ -35,6 +34,30 @@ exports.addproxyconfig = function(req, res){
 			
 			  	res.send( (err === null) ? { msg: '' } : { msg: err });
 			});			
+				
+			})		//count++;
+				
+			}
+		    else{
+				count_doc=0
+				countdoc++;
+				cachedb.configid=count_doc.toString();
+                  cachedb.targeturl=req.body.targeturl
+             cachedb.latency=req.body.latency
+
+            //console.log(cachedb.targeturl)
+				cachedb.save(function(err, data){
+				if(err) 
+					res.send(err);
+
+				//add info to roouting table as well
+				
+			
+			  	res.send( (err === null) ? { msg: '' } : { msg: err });
+			})
+        }
+			
+        
 	
 }
 
