@@ -1,9 +1,9 @@
 
 //connect to database
 var mongoose = require("mongoose");
-//mongoose.connect("mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb");
+mongoose.connect("mongodb://cmpe273team26:cmpe273team26@ds047800.mongolab.com:47800/proxydb");
 
-mongoose.connect("mongodb://localhost:27017/proxydb");
+//mongoose.connect("mongodb://localhost:27017/proxydb");
 //require the colletions
 var ProxyConfig = require("../models/ProxyConfigModel");
 var RoutingInfo = require("../models/RoutingInfo");

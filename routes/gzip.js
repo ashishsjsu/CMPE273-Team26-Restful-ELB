@@ -3,7 +3,7 @@ var httpProxy = require('http-proxy'),
  	connect = require('connect')
  	GzipModel = require("../models/Gzip")
  	compression = require('compression')
-function creategzip(req,res){
+/*function creategzip(req,res){
 	//var url = gzipModel.findOne
 	console.log("In creategzip")
 	var url =req.body.targeturl
@@ -45,6 +45,48 @@ function creategzip(req,res){
 				//res.json({msg:"gzip running on: " + port});
 				//console.log("In creategzip proxy "+proxy)
 				//res.end();
+				return port;
+}*/
+
+function creategzip(req,res){
+	
+	//console.log("In creategzip")
+	var url =req.body.targeturl
+	//console.log("In creategzip url "+url)
+	var port = generatePortNumber()
+	//console.log("In creategzip port "+port)
+	
+	var proxy = httpProxy.createProxy({				
+			  target: url
+				});
+	app.use(function(req,res){
+		if(req.method === 'GET'){
+		connectgzip.gzip()
+		proxy.web(req, res)//,{				
+			  //target: url
+			//});
+		}		
+				//console.log("in compression")
+				//proxy.web(req, res,{				
+				//  target: url
+				//});				
+	});
+	
+		process.on('uncaughtException', function (err) {
+    	
+    	//assign a new port if previous one is already in use and update routing table
+    	if(err.errno === "EADDRINUSE")
+    	{
+    		var port =  generatePortNumber();
+    		console.log(port);
+    		gzipserver = http.createServer(app).listen(port)
+   	 	}
+		});
+		gzipserver = http.createServer(app).listen(port)
+			//var proxy = httpProxy.createProxyServer({				
+			//	  target: url
+			//	});
+		console.log("target url: " + url)
 				return port;
 }
 
