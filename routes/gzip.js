@@ -2,7 +2,8 @@ var httpProxy = require('http-proxy'),
  	http = require('http'),
  	connect = require('connect')
  	GzipModel = require("../models/Gzip")
- 	compression = require('compression')
+ 	compression = require('compression'),
+ 	connectgzip = require('connect-gzip');
 /*function creategzip(req,res){
 	//var url = gzipModel.findOne
 	console.log("In creategzip")
@@ -55,21 +56,28 @@ function creategzip(req,res){
 	//console.log("In creategzip url "+url)
 	var port = generatePortNumber()
 	//console.log("In creategzip port "+port)
+
+	var app = connect();
 	
-	var proxy = httpProxy.createProxy({				
-			  target: url
-				});
+	var proxy = httpProxy.createProxy({	target: url });
+	
+
+	app.use(function(req, res, next){
+			
+			connectgzip.gzip();
+			console.log("Hey");
+			next();
+
+	});
+
+
 	app.use(function(req,res){
 		if(req.method === 'GET'){
-		connectgzip.gzip()
-		proxy.web(req, res)//,{				
-			  //target: url
-			//});
-		}		
-				//console.log("in compression")
-				//proxy.web(req, res,{				
-				//  target: url
-				//});				
+					
+				console.log("in compression")
+			    proxy.web(req, res);
+
+		}			
 	});
 	
 		process.on('uncaughtException', function (err) {
